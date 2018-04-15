@@ -1,0 +1,14 @@
+// 自定义结构体
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float4 color : COLOR;
+};
+
+
+// Pixel Shader
+// return the final pixel color
+float4 ColorPixelShader(PixelInputType input) : SV_TARGET
+{
+    return input.color;
+}

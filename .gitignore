@@ -1,0 +1,13 @@
+*.ncb
+*.user
+*.suo
+*.opensdf
+*.sdf
+*.kfx
+*.model_bin
+*.aps
+*.gch
+*_vc*_*_*
+.vs
+Debug
+shader-error.txt
