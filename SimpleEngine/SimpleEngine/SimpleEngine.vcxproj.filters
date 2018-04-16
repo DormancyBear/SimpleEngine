@@ -13,113 +13,47 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Effect Files">
-      <UniqueIdentifier>{811e2495-62ff-46c7-b99c-309dcdfb43ab}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="SimpleEngine.ico">
-      <Filter>资源文件</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="media\SimpleEngine.rc">
-      <Filter>资源文件</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="media\color.vs">
-      <Filter>Effect Files</Filter>
-    </None>
-    <None Include="media\color.ps">
-      <Filter>Effect Files</Filter>
-    </None>
-    <None Include="media\texture.vs">
-      <Filter>Effect Files</Filter>
-    </None>
-    <None Include="media\texture.ps">
-      <Filter>Effect Files</Filter>
-    </None>
-    <None Include="media\light.ps">
-      <Filter>Effect Files</Filter>
-    </None>
-    <None Include="media\light.vs">
-      <Filter>Effect Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Engine\Include\CameraClass.h">
+    <ClInclude Include="include\cameraclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Include\GraphicsClass.h">
+    <ClInclude Include="include\d3dclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Include\ModelClass.h">
+    <ClInclude Include="include\graphicsclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Include\MultiThreadMgr.h">
+    <ClInclude Include="include\inputclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Include\resource.h">
+    <ClInclude Include="include\soundclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Include\SimpleEngine.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Include\TextureClass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Include\ShaderClass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Include\LightClass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Include\D3DClass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Include\SystemClass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Include\InputClass.h">
+    <ClInclude Include="include\systemclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\Src\CameraClass.cpp">
+    <ClCompile Include="src\cameraclass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Src\GraphicsClass.cpp">
+    <ClCompile Include="src\d3dclass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Src\ModelClass.cpp">
+    <ClCompile Include="src\graphicsclass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Src\MultiThreadMgr.cpp">
+    <ClCompile Include="src\inputclass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Src\SimpleEngine.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Include\TextureClass.cpp">
+    <ClCompile Include="src\soundclass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Src\ShaderClass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Include\LightClass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Src\D3DClass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Src\SystemClass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Src\InputClass.cpp">
+    <ClCompile Include="src\systemclass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
