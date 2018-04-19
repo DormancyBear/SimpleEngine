@@ -31,11 +31,11 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	m_screenWidth = screenWidth;
 	m_screenHeight = screenHeight;
 
-	// Initialize the location of the mouse on the screen.
+	// 启动程序时鼠标位置会被固定在 (0,0)
 	m_mouseX = 0;
 	m_mouseY = 0;
 
-	// Initialize the main direct input interface.
+	// 我们通过 direct input interface 去 initialize other input devices
 	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL);
 	if(FAILED(result))
 	{
@@ -56,14 +56,14 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 		return false;
 	}
 
-	// Set the cooperative level of the keyboard to share with other programs.
-	result = m_keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+	// Set the cooperative level of the keyboard to not share with other programs( 独占 )
+	result = m_keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 	if(FAILED(result))
 	{
 		return false;
 	}
 
-	// Now acquire the keyboard.
+	// 通过 acquire 来 get access to the	keyboard( 否则即使你 press a key, your application cannot see the input )
 	result = m_keyboard->Acquire();
 	if(FAILED(result))
 	{
@@ -162,13 +162,15 @@ bool InputClass::ReadKeyboard()
 	HRESULT result;
 
 
-	// Read the keyboard device.
+	// 一个字节对应一个键, 存储了各个 key 的状态( pressed... )
 	result = m_keyboard->GetDeviceState(sizeof(m_keyboardState), (LPVOID)&m_keyboardState);
 	if(FAILED(result))
 	{
 		// If the keyboard lost focus or was not acquired then try to get control back.
 		if((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
 		{
+			// 当 window 处于 minimized 状态时, Acquire will fail
+			// 只有当 the window comes to the foreground, Acquire 才会成功( 然后才能读到 keyboard state )
 			m_keyboard->Acquire();
 		}
 		else
@@ -186,7 +188,7 @@ bool InputClass::ReadMouse()
 	HRESULT result;
 
 
-	// Read the mouse device.
+	// the state of the mouse: 从上一帧到现在鼠标的位置变化( 并不是直接给你 the actual position of the mouse on the screen )
 	result = m_mouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&m_mouseState);
 	if(FAILED(result))
 	{

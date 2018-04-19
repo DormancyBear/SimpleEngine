@@ -166,6 +166,7 @@ void SystemClass::Run()
 bool SystemClass::Frame()
 {
 	bool result;
+	int mouseX, mouseY;
 
 
 	// Do the input frame processing.
@@ -175,8 +176,11 @@ bool SystemClass::Frame()
 		return false;
 	}
 
+	// Get the location of the mouse from the input object,
+	m_Input->GetMouseLocation(mouseX, mouseY);
+
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame();
+	result = m_Graphics->Frame(mouseX, mouseY);
 	if(!result)
 	{
 		return false;
@@ -193,6 +197,7 @@ bool SystemClass::Frame()
 }
 
 
+// ¶ªÆú Windows Input System, ×ªÓÃ DirectX input system
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	return DefWindowProc(hwnd, umsg, wparam, lparam);
