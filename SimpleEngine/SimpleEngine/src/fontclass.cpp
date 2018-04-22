@@ -159,6 +159,7 @@ ID3D11ShaderResourceView* FontClass::GetTexture()
 }
 
 
+// 一句 text sentence 对应一个 vertex buffer
 void FontClass::BuildVertexArray(void* vertices, char* sentence, float drawX, float drawY)
 {
 	VertexType* vertexPtr;
@@ -174,7 +175,9 @@ void FontClass::BuildVertexArray(void* vertices, char* sentence, float drawX, fl
 	// Initialize the index to the vertex array.
 	index = 0;
 
-	// Draw each letter onto a quad.
+	// how to render a single character?
+	// 为每个 character 创建一个 square( 两个 triangles 组成一个 square )
+	// 然后 render the single character from the font texture onto that square
 	for(i=0; i<numLetters; i++)
 	{
 		letter = ((int)sentence[i]) - 32;
@@ -195,6 +198,7 @@ void FontClass::BuildVertexArray(void* vertices, char* sentence, float drawX, fl
 			vertexPtr[index].texture = D3DXVECTOR2(m_Font[letter].right, 1.0f);
 			index++;
 
+			// font texture size: 1024x16
 			vertexPtr[index].position = D3DXVECTOR3(drawX, (drawY - 16), 0.0f);  // Bottom left.
 			vertexPtr[index].texture = D3DXVECTOR2(m_Font[letter].left, 1.0f);
 			index++;

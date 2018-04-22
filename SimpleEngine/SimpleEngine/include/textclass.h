@@ -17,6 +17,8 @@
 class TextClass
 {
 private:
+
+	// hold the rendering information for each text sentence
 	struct SentenceType
 	{
 		ID3D11Buffer *vertexBuffer, *indexBuffer;

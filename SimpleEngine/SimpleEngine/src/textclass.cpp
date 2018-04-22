@@ -372,7 +372,10 @@ bool TextClass::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType*
 	// Create a pixel color vector with the input sentence color.
 	pixelColor = D3DXVECTOR4(sentence->red, sentence->green, sentence->blue, 1.0f);
 
-	// Render the text using the font shader.
+	// m_baseViewMatrix: instead of the current view matrix
+	// allow us to draw text to the same location on the screen each frame regardless of where the current view may be
+	// orthoMatrix: instead of the regular projection matrix
+	// since this should be drawn using 2D coordinates.
 	result = m_Shader->Render(deviceContext, sentence->indexCount, worldMatrix, m_baseViewMatrix, orthoMatrix, m_Font->GetTexture(), 
 								  pixelColor);
 	if(!result)

@@ -48,6 +48,18 @@
     <ClInclude Include="include\textureclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\bitmapclass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lightshaderclass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\modelclass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lightclass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cameraclass.cpp">
@@ -83,12 +95,30 @@
     <ClCompile Include="src\textureclass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\bitmapclass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lightshaderclass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\modelclass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lightclass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="effect\font.ps">
       <Filter>Effect Files</Filter>
     </None>
     <None Include="effect\font.vs">
+      <Filter>Effect Files</Filter>
+    </None>
+    <None Include="effect\light.ps">
+      <Filter>Effect Files</Filter>
+    </None>
+    <None Include="effect\light.vs">
       <Filter>Effect Files</Filter>
     </None>
   </ItemGroup>

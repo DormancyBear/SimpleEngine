@@ -9,6 +9,7 @@
 Texture2D shaderTexture;
 SamplerState SampleType;
 
+// 用于控制字体颜色
 cbuffer PixelBuffer
 {
     float4 pixelColor;
@@ -45,8 +46,8 @@ float4 FontPixelShader(PixelInputType input) : SV_TARGET
 	// If the color is other than black on the texture then this is a pixel in the font so draw it using the font pixel color.
 	else
 	{
+		color.rgb = pixelColor.rgb;
 		color.a = 1.0f;
-		color = color * pixelColor;
 	}
 
     return color;

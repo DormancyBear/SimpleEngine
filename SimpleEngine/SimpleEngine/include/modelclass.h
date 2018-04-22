@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Filename: fontclass.h
+// Filename: modelclass.h
 ////////////////////////////////////////////////////////////////////////////////
-#ifndef _FONTCLASS_H_
-#define _FONTCLASS_H_
+#ifndef _MODELCLASS_H_
+#define _MODELCLASS_H_
 
 
 //////////////
@@ -10,8 +10,6 @@
 //////////////
 #include <d3d11.h>
 #include <d3dx10math.h>
-#include <fstream>
-using namespace std;
 
 
 ///////////////////////
@@ -21,43 +19,42 @@ using namespace std;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: FontClass
+// Class name: ModelClass
 ////////////////////////////////////////////////////////////////////////////////
-class FontClass
+class ModelClass
 {
 private:
-	struct FontType
-	{
-		float left, right;
-		int size;	// 这个 character 在 font image 中占的像素宽度
-	};
-
 	struct VertexType
 	{
 		D3DXVECTOR3 position;
 	    D3DXVECTOR2 texture;
+		D3DXVECTOR3 normal;
 	};
 
 public:
-	FontClass();
-	FontClass(const FontClass&);
-	~FontClass();
+	ModelClass();
+	ModelClass(const ModelClass&);
+	~ModelClass();
 
-	bool Initialize(ID3D11Device*, char*, WCHAR*);
+	bool Initialize(ID3D11Device*, WCHAR*);
 	void Shutdown();
+	void Render(ID3D11DeviceContext*);
 
+	int GetIndexCount();
 	ID3D11ShaderResourceView* GetTexture();
 
-	void BuildVertexArray(void*, char*, float, float);
 
 private:
-	bool LoadFontData(char*);
-	void ReleaseFontData();
+	bool InitializeBuffers(ID3D11Device*);
+	void ShutdownBuffers();
+	void RenderBuffers(ID3D11DeviceContext*);
+
 	bool LoadTexture(ID3D11Device*, WCHAR*);
 	void ReleaseTexture();
 
 private:
-	FontType* m_Font;
+	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
+	int m_vertexCount, m_indexCount;
 	TextureClass* m_Texture;
 };
 

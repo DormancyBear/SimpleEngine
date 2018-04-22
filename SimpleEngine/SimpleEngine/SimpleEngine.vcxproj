@@ -114,11 +114,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\bitmapclass.h" />
     <ClInclude Include="include\cameraclass.h" />
     <ClInclude Include="include\d3dclass.h" />
     <ClInclude Include="include\fontclass.h" />
     <ClInclude Include="include\graphicsclass.h" />
     <ClInclude Include="include\inputclass.h" />
+    <ClInclude Include="include\lightclass.h" />
+    <ClInclude Include="include\lightshaderclass.h" />
+    <ClInclude Include="include\modelclass.h" />
     <ClInclude Include="include\shaderclass.h" />
     <ClInclude Include="include\soundclass.h" />
     <ClInclude Include="include\systemclass.h" />
@@ -126,12 +130,16 @@
     <ClInclude Include="include\textureclass.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\bitmapclass.cpp" />
     <ClCompile Include="src\cameraclass.cpp" />
     <ClCompile Include="src\d3dclass.cpp" />
     <ClCompile Include="src\fontclass.cpp" />
     <ClCompile Include="src\graphicsclass.cpp" />
     <ClCompile Include="src\inputclass.cpp" />
+    <ClCompile Include="src\lightclass.cpp" />
+    <ClCompile Include="src\lightshaderclass.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\modelclass.cpp" />
     <ClCompile Include="src\shaderclass.cpp" />
     <ClCompile Include="src\soundclass.cpp" />
     <ClCompile Include="src\systemclass.cpp" />
@@ -141,6 +149,8 @@
   <ItemGroup>
     <None Include="effect\font.ps" />
     <None Include="effect\font.vs" />
+    <None Include="effect\light.ps" />
+    <None Include="effect\light.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

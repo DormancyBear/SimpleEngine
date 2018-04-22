@@ -30,15 +30,16 @@ D3DClass::~D3DClass()
 }
 
 
-bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, 
-						  float screenDepth, float screenNear)
+bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
 {
 	HRESULT result;
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;
 	IDXGIOutput* adapterOutput;
-	unsigned int numModes, i, numerator, denominator;
+	unsigned int numModes, i, numerator, denominator, stringLength;
 	DXGI_MODE_DESC* displayModeList;
+	DXGI_ADAPTER_DESC adapterDesc;
+	int error;
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	D3D_FEATURE_LEVEL featureLevel;
 	ID3D11Texture2D* backBufferPtr;
@@ -109,6 +110,23 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 				denominator = displayModeList[i].RefreshRate.Denominator;
 			}
 		}
+	}
+
+	// Get the adapter (video card) description.
+	result = adapter->GetDesc(&adapterDesc);
+	if(FAILED(result))
+	{
+		return false;
+	}
+
+	// Store the dedicated video card memory in megabytes.
+	m_videoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
+
+	// Convert the name of the video card to a character array and store it.
+	error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
+	if(error != 0)
+	{
+		return false;
 	}
 
 	// Release the display mode list.
@@ -186,8 +204,8 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// Create the swap chain, Direct3D device, and Direct3D device context.
-	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1, 
-										   D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, NULL, &m_deviceContext);
+	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1, D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, 
+										   &m_device, NULL, &m_deviceContext);
 	if(FAILED(result))
 	{
 		return false;
@@ -543,6 +561,14 @@ void D3DClass::GetOrthoMatrix(D3DXMATRIX& orthoMatrix)
 }
 
 
+void D3DClass::GetVideoCardInfo(char* cardName, int& memory)
+{
+	strcpy_s(cardName, 128, m_videoCardDescription);
+	memory = m_videoCardMemory;
+	return;
+}
+
+
 void D3DClass::TurnZBufferOn()
 {
 	m_deviceContext->OMSetDepthStencilState(m_depthStencilState, 1);
@@ -557,6 +583,8 @@ void D3DClass::TurnZBufferOff()
 }
 
 
+// if we don't turn on blending, font.ps 中设置的 alpha 值就是无效的
+// 导致最终屏幕上呈现的字体, 能看到 text 后面的 triangles( 颜色取决于 ps 返回的 color )
 void D3DClass::TurnOnAlphaBlending()
 {
 	float blendFactor[4];
