@@ -109,16 +109,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="effect\font.ps">
+    <None Include="media\RenderFX\font.ps">
       <Filter>Effect Files</Filter>
     </None>
-    <None Include="effect\font.vs">
+    <None Include="media\RenderFX\font.vs">
       <Filter>Effect Files</Filter>
     </None>
-    <None Include="effect\light.ps">
+    <None Include="media\RenderFX\light.ps">
       <Filter>Effect Files</Filter>
     </None>
-    <None Include="effect\light.vs">
+    <None Include="media\RenderFX\light.vs">
       <Filter>Effect Files</Filter>
     </None>
   </ItemGroup>

@@ -28,7 +28,7 @@ bool ShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 
 
 	// Initialize the vertex and pixel shaders.
-	result = InitializeShader(device, hwnd, L"./effect/font.vs", L"./effect/font.ps");
+	result = InitializeShader(device, hwnd, L"./media/RenderFX/font.vs", L"./media/RenderFX/font.ps");
 	if(!result)
 	{
 		return false;
