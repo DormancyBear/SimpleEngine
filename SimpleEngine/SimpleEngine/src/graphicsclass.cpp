@@ -173,15 +173,25 @@ void GraphicsClass::Shutdown()
 }
 
 
-bool GraphicsClass::Frame(int mouseX, int mouseY)
+bool GraphicsClass::Frame(int mouseX, int mouseY, int fps, int cpu, float frameTime)
 {
-	bool result;
-	static float rotation = 0.0f;
-
-
 	// Set the location of the mouse.
-	result = m_Text->SetMousePosition(mouseX, mouseY, m_D3D->GetDeviceContext());
+	bool result = m_Text->SetMousePosition(mouseX, mouseY, m_D3D->GetDeviceContext());
 	if(!result)
+	{
+		return false;
+	}
+
+	// Set the frames per second.
+	result = m_Text->SetFps(fps, m_D3D->GetDeviceContext());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Set the cpu usage.
+	result = m_Text->SetCpu(cpu, m_D3D->GetDeviceContext());
+	if (!result)
 	{
 		return false;
 	}
@@ -189,13 +199,20 @@ bool GraphicsClass::Frame(int mouseX, int mouseY)
 	// Set the position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 
-	// Update the rotation variable each frame.
-	rotation += (float)D3DX_PI * 0.002f;
-	if (rotation > 360.0f)
+	static float deltaTime = 0.0f;
+	static float rotation = 0.0f;
+	deltaTime += frameTime;
+	if (deltaTime >= 10.0f)
 	{
-		rotation -= 360.0f;
-	}
+		deltaTime = 0.0f;
 
+		rotation += (float)D3DX_PI * 0.002f;
+		if (rotation > 360.0f)
+		{
+			rotation -= 360.0f;
+		}
+	}
+	
 	// Render the graphics scene.
 	result = Render(rotation);
 	if (!result)

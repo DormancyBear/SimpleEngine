@@ -36,11 +36,10 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;
 	IDXGIOutput* adapterOutput;
-	unsigned int numModes, i, numerator, denominator, stringLength;
+	unsigned int numModes, i, stringLength;
 	DXGI_MODE_DESC* displayModeList;
 	DXGI_ADAPTER_DESC adapterDesc;
 	int error;
-	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	D3D_FEATURE_LEVEL featureLevel;
 	ID3D11Texture2D* backBufferPtr;
 	D3D11_TEXTURE2D_DESC depthBufferDesc;
@@ -100,6 +99,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 
 	// Now go through all the display modes and find the one that matches the screen width and height.
 	// When a match is found store the numerator and denominator of the refresh rate for that monitor.
+	unsigned int numerator, denominator;
 	for(i=0; i<numModes; i++)
 	{
 		if(displayModeList[i].Width == (unsigned int)screenWidth)
@@ -145,24 +145,22 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	factory->Release();
 	factory = 0;
 
-	// Initialize the swap chain description.
+	// Describes a swap chain.
+	DXGI_SWAP_CHAIN_DESC swapChainDesc;
     ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 
-	// Set to a single back buffer.
+	// A value that describes the number of buffers in the swap chain( 包含了 the front buffer )
     swapChainDesc.BufferCount = 1;
 
-	// Set the width and height of the back buffer.
     swapChainDesc.BufferDesc.Width = screenWidth;
     swapChainDesc.BufferDesc.Height = screenHeight;
-
-	// Set regular 32-bit surface for the back buffer.
     swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-	// Set the refresh rate of the back buffer.
+	// 显示器刷新频率( refresh rate )为 60Hz 时, 显示一帧图像需要 1/60 秒( 从左上到右下完整地读进整个 front buffer )
 	if(m_vsync_enabled)
 	{
-	    swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
-		swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
+	    swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;	// 分子
+		swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;	// 分母
 	}
 	else
 	{
@@ -512,16 +510,17 @@ void D3DClass::BeginScene(float red, float green, float blue, float alpha)
 
 void D3DClass::EndScene()
 {
-	// Present the back buffer to the screen since rendering is complete.
+	// HRESULT Present(UINT SyncInterval, UINT Flags);
+	// SyncInterval 参数用于指定如何同步 presenting 这个过程 => 等待几个 vertical blank 之后再进行提交
+	// 首先, 屏幕绘制是从左上到右下, 每个像素点依次绘制的
+	// 每当绘制完一行, 触发一个 horizontal blank, 所有行绘制完毕( 垂直方向绘制完毕 ), 触发一个 vertical blank
 	if(m_vsync_enabled)
 	{
-		// Lock to screen refresh rate.
-		m_swapChain->Present(1, 0);
+		m_swapChain->Present(1, 0);	// 在触发 1 个 vertical blank 之后进行提交, 显然, 屏幕 refresh rate 为 60Hz 时, 程序会被锁到 60 帧
 	}
 	else
 	{
-		// Present as fast as possible.
-		m_swapChain->Present(0, 0);
+		m_swapChain->Present(0, 0);	// 等待 0 个 vertical blank, 立即提交
 	}
 
 	return;

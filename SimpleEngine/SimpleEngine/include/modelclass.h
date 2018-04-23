@@ -20,9 +20,10 @@ using namespace std;
 #include "textureclass.h"
 
 
-// Maya, 3DMax... 各有一套模型 format
-// 且这些 model format 里, 大量数据都只对该建模软件有效, 在游戏实时渲染时只用得到其中的一部分数据
-// 所以我们需要 create our own model format and write a parser to convert those different formats into our own format.
+// 像 3DMax, Maya 这些建模软件都是用的离线渲染, 而游戏引擎则是实时渲染
+// 两者所用的材质系统完全不同, 最终 3DMax 提供给引擎的只有网格模型 + 贴图, 其他数据都是无效冗余的
+// 所以我们需要把 3DMax 导出的 model format 转换成引擎自用的 format( 剔除无用数据 )
+// create our own model format and write a parser to convert those different formats into our own format.
 class ModelClass
 {
 private:

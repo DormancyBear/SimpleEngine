@@ -28,6 +28,8 @@ public:
 	ID3D11ShaderResourceView* GetTexture();
 
 private:
+	// 纹理是基于.png 等图片文件生成的存储了图像数据的二维数组，
+	// 纹理像素( Texture Pixel，简称 Texel， 二维数组中的一项 )与原图片中的像素点一一对应。
 	ID3D11ShaderResourceView* m_texture;
 };
 

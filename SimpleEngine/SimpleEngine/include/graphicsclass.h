@@ -22,7 +22,7 @@
 // GLOBALS //
 /////////////
 const bool FULL_SCREEN = true;
-const bool VSYNC_ENABLED = true;
+const bool VSYNC_ENABLED = false;	// 垂直同步, 限制在60帧
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;
 
@@ -39,7 +39,7 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame(int, int);
+	bool Frame(int, int, int, int, float);
 
 private:
 	bool Render(float);
