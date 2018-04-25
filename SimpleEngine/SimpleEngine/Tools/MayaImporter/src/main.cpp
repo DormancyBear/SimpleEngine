@@ -8,7 +8,12 @@
 //////////////
 #include <iostream>
 #include <fstream>
+#include "XmlHelper.h"
+
 using namespace std;
+
+
+#pragma comment(lib, "XmlHelper.lib")
 
 
 //////////////
@@ -43,7 +48,6 @@ int main()
 	bool result;
 	char filename[256];
 	int vertexCount, textureCount, normalCount, faceCount;
-	char garbage;
 
 
 	// Read in the name of the model file.
@@ -72,8 +76,6 @@ int main()
 
 	// Notify the user the model has been converted.
 	cout << "\nFile has been converted." << endl;
-	cout << "\nDo you wish to exit (y/n)? ";
-	cin >> garbage;
 
 	return 0;
 }
@@ -178,10 +180,8 @@ bool LoadDataStructures(char* filename, int vertexCount, int textureCount, int n
 {
 	VertexType *vertices, *texcoords, *normals;
 	FaceType *faces;
-	ifstream fin;
 	int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
 	char input, input2;
-	ofstream fout;
 
 
 	// Initialize the four data structures.
@@ -216,6 +216,7 @@ bool LoadDataStructures(char* filename, int vertexCount, int textureCount, int n
 	faceIndex = 0;
 
 	// Open the file.
+	ifstream fin;
 	fin.open(filename);
 
 	// Check if it was successful in opening the file.
@@ -291,46 +292,96 @@ bool LoadDataStructures(char* filename, int vertexCount, int textureCount, int n
 	// Close the file.
 	fin.close();
 
-	// Open the output file.
-	fout.open("model.txt");
-	
 	// Write out the file header that our model format uses.
-	fout << "Vertex Count: " << (faceCount * 3) << endl;
-	fout << endl;
-	fout << "Data:" << endl;
-	fout << endl;
+	XmlHelper::XMLDocument mesh_doc;
+	XmlHelper::XMLNode* root = mesh_doc.AllocateNode(XmlHelper::XMLNodeType::XNT_Element, "model");
+	mesh_doc.AssignRootNode(root);
 
-	// Now loop through all the faces and output the three vertices for each face.
-	for(int i=0; i<faceIndex; i++)
+	XmlHelper::XMLNode* vertices_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "vertices");
+	vertices_node->AppendAttribute(mesh_doc.AllocateAttribute("vertex_count", std::to_string(faceCount * 3)));
 	{
-		vIndex = faces[i].vIndex1 - 1;
-		tIndex = faces[i].tIndex1 - 1;
-		nIndex = faces[i].nIndex1 - 1;
+		// Now loop through all the faces and output the three vertices for each face.
+		for (int i = 0; i<faceIndex; i++)
+		{
+			vIndex = faces[i].vIndex1 - 1;
+			tIndex = faces[i].tIndex1 - 1;
+			nIndex = faces[i].nIndex1 - 1;
 
-		fout << vertices[vIndex].x << ' ' << vertices[vIndex].y << ' ' << vertices[vIndex].z << ' '
-			 << texcoords[tIndex].x << ' ' << texcoords[tIndex].y << ' '
-			 << normals[nIndex].x << ' ' << normals[nIndex].y << ' ' << normals[nIndex].z << endl;
+			XmlHelper::XMLNode* vertex1_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "vertex");
+			{
+				XmlHelper::XMLNode* position_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "position");
+				std::string strPosition = std::to_string(vertices[vIndex].x) + ' ' + std::to_string(vertices[vIndex].y)
+					+ ' ' + std::to_string(vertices[vIndex].z);
+				position_node->AppendAttribute(mesh_doc.AllocateAttribute("value", strPosition));
+				vertex1_node->AppendNode(position_node);
 
-		vIndex = faces[i].vIndex2 - 1;
-		tIndex = faces[i].tIndex2 - 1;
-		nIndex = faces[i].nIndex2 - 1;
+				XmlHelper::XMLNode* texcoord_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "texcoord");
+				std::string strTexcoord = std::to_string(texcoords[tIndex].x) + ' ' + std::to_string(texcoords[tIndex].y);
+				texcoord_node->AppendAttribute(mesh_doc.AllocateAttribute("value", strTexcoord));
+				vertex1_node->AppendNode(texcoord_node);
 
-		fout << vertices[vIndex].x << ' ' << vertices[vIndex].y << ' ' << vertices[vIndex].z << ' '
-			 << texcoords[tIndex].x << ' ' << texcoords[tIndex].y << ' '
-			 << normals[nIndex].x << ' ' << normals[nIndex].y << ' ' << normals[nIndex].z << endl;
+				XmlHelper::XMLNode* normal_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "normal");
+				std::string strNormal = std::to_string(normals[vIndex].x) + ' ' + std::to_string(normals[vIndex].y)
+					+ ' ' + std::to_string(normals[vIndex].z);
+				normal_node->AppendAttribute(mesh_doc.AllocateAttribute("value", strNormal));
+				vertex1_node->AppendNode(normal_node);
+			}
+			vertices_node->AppendNode(vertex1_node);
 
-		vIndex = faces[i].vIndex3 - 1;
-		tIndex = faces[i].tIndex3 - 1;
-		nIndex = faces[i].nIndex3 - 1;
+			vIndex = faces[i].vIndex2 - 1;
+			tIndex = faces[i].tIndex2 - 1;
+			nIndex = faces[i].nIndex2 - 1;
 
-		fout << vertices[vIndex].x << ' ' << vertices[vIndex].y << ' ' << vertices[vIndex].z << ' '
-			 << texcoords[tIndex].x << ' ' << texcoords[tIndex].y << ' '
-			 << normals[nIndex].x << ' ' << normals[nIndex].y << ' ' << normals[nIndex].z << endl;
+			XmlHelper::XMLNode* vertex2_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "vertex");
+			{
+				XmlHelper::XMLNode* position_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "position");
+				std::string strPosition = std::to_string(vertices[vIndex].x) + ' ' + std::to_string(vertices[vIndex].y)
+					+ ' ' + std::to_string(vertices[vIndex].z);
+				position_node->AppendAttribute(mesh_doc.AllocateAttribute("value", strPosition));
+				vertex2_node->AppendNode(position_node);
+
+				XmlHelper::XMLNode* texcoord_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "texcoord");
+				std::string strTexcoord = std::to_string(texcoords[tIndex].x) + ' ' + std::to_string(texcoords[tIndex].y);
+				texcoord_node->AppendAttribute(mesh_doc.AllocateAttribute("value", strTexcoord));
+				vertex2_node->AppendNode(texcoord_node);
+
+				XmlHelper::XMLNode* normal_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "normal");
+				std::string strNormal = std::to_string(normals[vIndex].x) + ' ' + std::to_string(normals[vIndex].y)
+					+ ' ' + std::to_string(normals[vIndex].z);
+				normal_node->AppendAttribute(mesh_doc.AllocateAttribute("value", strNormal));
+				vertex2_node->AppendNode(normal_node);
+			}
+			vertices_node->AppendNode(vertex2_node);
+
+			vIndex = faces[i].vIndex3 - 1;
+			tIndex = faces[i].tIndex3 - 1;
+			nIndex = faces[i].nIndex3 - 1;
+
+			XmlHelper::XMLNode* vertex3_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "vertex");
+			{
+				XmlHelper::XMLNode* position_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "position");
+				std::string strPosition = std::to_string(vertices[vIndex].x) + ' ' + std::to_string(vertices[vIndex].y)
+					+ ' ' + std::to_string(vertices[vIndex].z);
+				position_node->AppendAttribute(mesh_doc.AllocateAttribute("value", strPosition));
+				vertex3_node->AppendNode(position_node);
+
+				XmlHelper::XMLNode* texcoord_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "texcoord");
+				std::string strTexcoord = std::to_string(texcoords[tIndex].x) + ' ' + std::to_string(texcoords[tIndex].y);
+				texcoord_node->AppendAttribute(mesh_doc.AllocateAttribute("value", strTexcoord));
+				vertex3_node->AppendNode(texcoord_node);
+
+				XmlHelper::XMLNode* normal_node = mesh_doc.AllocateNode(XmlHelper::XNT_Element, "normal");
+				std::string strNormal = std::to_string(normals[vIndex].x) + ' ' + std::to_string(normals[vIndex].y)
+					+ ' ' + std::to_string(normals[vIndex].z);
+				normal_node->AppendAttribute(mesh_doc.AllocateAttribute("value", strNormal));
+				vertex3_node->AppendNode(normal_node);
+			}
+			vertices_node->AppendNode(vertex3_node);
+		}
 	}
-
-	// Close the output file.
-	fout.close();
-
+	root->AppendNode(vertices_node);
+	mesh_doc.Save("model.xml");
+	
 	// Release the four data structures.
 	if(vertices)
 	{

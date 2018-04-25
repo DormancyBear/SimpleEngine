@@ -10,6 +10,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{5D50E991-C820-4E60-BEDC-F6553EDDEE4C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaImporter", "SimpleEngine\Tools\MayaImporter\MayaImporter.vcxproj", "{0BE99492-7674-48B7-8C76-E1D6E38D06B3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1B2D9193-53A8-4103-8668-7AB382E72A98} = {1B2D9193-53A8-4103-8668-7AB382E72A98}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{B23014AF-3F04-4669-836F-FD7C96A7793A}"
 EndProject
