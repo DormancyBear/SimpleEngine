@@ -2,6 +2,30 @@
 // Filename: modelclass.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "modelclass.h"
+#include "XmlHelper.h"
+#include <sstream>
+
+
+template<typename Out>
+void split(const std::string &s, char delim, Out result, int size)
+{
+	std::stringstream ss(s);
+	std::string item;
+
+	for (size_t i = 0; i < size; i++)
+	{
+		if (std::getline(ss, item, delim))
+		{
+			*(result++) = item;
+		}
+	}
+}
+
+std::vector<std::string> split(const std::string &s, char delim, int size) {
+	std::vector<std::string> elems;
+	split(s, delim, std::back_inserter(elems), size);
+	return elems;
+}
 
 
 ModelClass::ModelClass()
@@ -255,30 +279,19 @@ void ModelClass::ReleaseTexture()
 
 bool ModelClass::LoadModel(char* filename)
 {
-	ifstream fin;
-	char input;
-	int i;
+	XmlHelper::XMLDocument model_doc;
+	std::shared_ptr<XmlHelper::XMLNode> root_node = model_doc.Parse(filename);
 
-
-	// Open the model file.
-	fin.open(filename);
-
-	// If it could not open the file then exit.
-	if (fin.fail())
+	std::shared_ptr<XmlHelper::XMLNode> vertices_node = root_node->FirstNode("vertices");
+	if (vertices_node != nullptr)
 	{
-		return false;
+		m_vertexCount = std::stoi(vertices_node->FirstAttribute("vertex_count")->Value());
 	}
-
-	// Read up to the value of vertex count.
-	fin.get(input);
-	while (input != ':')
+	else
 	{
-		fin.get(input);
+		m_vertexCount = 0;
 	}
-
-	// Read in the vertex count.
-	fin >> m_vertexCount;
-
+	
 	// Set the number of indices to be the same as the vertex count.
 	m_indexCount = m_vertexCount;
 
@@ -289,25 +302,33 @@ bool ModelClass::LoadModel(char* filename)
 		return false;
 	}
 
-	// Read up to the beginning of the data.
-	fin.get(input);
-	while (input != ':')
-	{
-		fin.get(input);
-	}
-	fin.get(input);
-	fin.get(input);
-
 	// Read in the vertex data.
-	for (i = 0; i<m_vertexCount; i++)
+	std::shared_ptr<XmlHelper::XMLNode> vertex_node = vertices_node->FirstNode("vertex");
+	for (size_t i = 0; i < m_vertexCount, vertex_node != nullptr; i++)
 	{
-		fin >> m_model[i].x >> m_model[i].y >> m_model[i].z;
-		fin >> m_model[i].tu >> m_model[i].tv;
-		fin >> m_model[i].nx >> m_model[i].ny >> m_model[i].nz;
-	}
 
-	// Close the model file.
-	fin.close();
+		std::shared_ptr<XmlHelper::XMLNode> position_node = vertex_node->FirstNode("position");
+		string position_value = position_node->FirstAttribute("value")->Value();
+		std::vector<std::string> position_elems = split(position_value, ' ', 3);
+		m_model[i].x = std::stof(position_elems[0]);
+		m_model[i].y = std::stof(position_elems[1]);
+		m_model[i].z = std::stof(position_elems[2]);
+
+		std::shared_ptr<XmlHelper::XMLNode> uv_node = vertex_node->FirstNode("texcoord");
+		string uv_value = uv_node->FirstAttribute("value")->Value();
+		std::vector<std::string> uv_elems = split(uv_value, ' ', 2);
+		m_model[i].tu = std::stof(uv_elems[0]);
+		m_model[i].tv = std::stof(uv_elems[1]);
+
+		std::shared_ptr<XmlHelper::XMLNode> normal_node = vertex_node->FirstNode("normal");
+		string normal_value = normal_node->FirstAttribute("value")->Value();
+		std::vector<std::string> normal_elems = split(normal_value, ' ', 3);
+		m_model[i].nx = std::stof(normal_elems[0]);
+		m_model[i].ny = std::stof(normal_elems[1]);
+		m_model[i].nz = std::stof(normal_elems[2]);
+
+		vertex_node = vertex_node->NextSibling("vertex");
+	}
 
 	return true;
 }

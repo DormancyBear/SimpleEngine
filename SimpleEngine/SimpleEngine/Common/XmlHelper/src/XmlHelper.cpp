@@ -7,9 +7,10 @@ using namespace XmlHelper;
 
 XMLDocument::XMLDocument()
 {
-	_doc = new rapidxml::xml_document<char>();
+	_doc = std::make_shared<rapidxml::xml_document<char>>();
 
 	// 通用 XML 声明
+	// first_node() 不把这个声明视为节点
 	rapidxml::xml_node<char>* declnode = _doc->allocate_node(rapidxml::node_declaration);
 	declnode->append_attribute(_doc->allocate_attribute("version", "1.0"));
 	declnode->append_attribute(_doc->allocate_attribute("encoding", "utf-8"));
@@ -17,10 +18,10 @@ XMLDocument::XMLDocument()
 }
 
 
-XMLNode* XMLDocument::Parse(const char *filename)
+std::shared_ptr<XMLNode> XMLDocument::Parse(const char *filename)
 {
 	std::ifstream inputfile;
-	inputfile.open(filename, std::ios_base::binary);
+	inputfile.open(filename);
 
 	// 获取文件长度
 	inputfile.seekg(0, std::ios_base::end);
@@ -35,7 +36,7 @@ XMLNode* XMLDocument::Parse(const char *filename)
 
 	// xml 解析
 	_doc->parse<0>(&xml_content[0]);
-	_root = new XMLNode(_doc->first_node());
+	_root = std::make_shared<XMLNode>(_doc->first_node());
 
 	return _root;
 }
@@ -53,19 +54,21 @@ void XMLDocument::Save(const char *filename)
 }
 
 
-XMLNode* XMLDocument::AllocateNode(XMLNodeType type, std::string name)
+std::shared_ptr<XMLNode> XMLDocument::AllocateNode(XMLNodeType type, std::string name)
 {
-	return new XMLNode(*_doc, type, _doc->allocate_string(name.c_str()));;
+	// rapidxml 内部通过指针来访问我们提供的字符串
+	// 所以必须确保字符串的生命周期, 不要用临时变量( 变量一旦销毁数据就没了 )
+	return std::make_shared<XMLNode>(*_doc, type, _doc->allocate_string(name.c_str()));
 }
 
 
-XMLAttribute* XMLDocument::AllocateAttribute(std::string name, std::string value)
+std::shared_ptr<XMLAttribute> XMLDocument::AllocateAttribute(std::string name, std::string value)
 {
-	return new XMLAttribute(*_doc, _doc->allocate_string(name.c_str()), _doc->allocate_string(value.c_str()));
+	return std::make_shared<XMLAttribute>(*_doc, _doc->allocate_string(name.c_str()), _doc->allocate_string(value.c_str()));
 }
 
 
-void XMLDocument::AssignRootNode(XMLNode* const & root_node)
+void XMLDocument::AssignRootNode(std::shared_ptr<XMLNode> const & root_node)
 {
 	_doc->append_node(root_node->GetStoredXmlNode());
 	_root = root_node;
@@ -127,15 +130,60 @@ XMLNode::XMLNode(rapidxml::xml_document<char>& doc, XMLNodeType type, char* name
 }
 
 
-void XMLNode::AppendNode(XMLNode* const & node)
+void XMLNode::AppendNode(std::shared_ptr<XMLNode> const & node)
 {
 	_node->append_node(node->GetStoredXmlNode());
 }
 
 
-void XMLNode::AppendAttribute(XMLAttribute* const & attr)
+void XMLNode::AppendAttribute(std::shared_ptr<XMLAttribute> const & attr)
 {
 	_node->append_attribute(attr->GetStoredXmlAttribute());
+}
+
+
+// Gets first child node, optionally matching node name.
+std::shared_ptr<XMLNode> XMLNode::FirstNode(std::string name) const
+{
+	rapidxml::xml_node<char>* result_node = _node->first_node(name.c_str());
+	if (result_node)
+	{
+		return std::make_shared<XMLNode>(result_node);
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+
+// Gets next sibling node, optionally matching node name.
+// Behaviour is undefined if node has no parent. Use parent() to test if node has a parent.
+std::shared_ptr<XMLNode> XMLNode::NextSibling(std::string name) const
+{
+	rapidxml::xml_node<char>* result_node = _node->next_sibling(name.c_str());
+	if (result_node)
+	{
+		return std::make_shared<XMLNode>(result_node);
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+
+std::shared_ptr<XMLAttribute> XMLNode::FirstAttribute(std::string name) const
+{
+	rapidxml::xml_attribute<char>* result_attr = _node->first_attribute(name.c_str());
+	if (result_attr)
+	{
+		return std::make_shared<XMLAttribute>(result_attr);
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 
@@ -145,9 +193,21 @@ rapidxml::xml_node<char>* XMLNode::GetStoredXmlNode()
 }
 
 
+XMLAttribute::XMLAttribute(rapidxml::xml_attribute<char>* attr)
+{
+	_attr = attr;
+}
+
+
 XMLAttribute::XMLAttribute(rapidxml::xml_document<char>& doc, char* name, char* value)
 {
 	_attr = doc.allocate_attribute(name, value);
+}
+
+
+std::string XMLAttribute::Value() const
+{
+	return std::string(_attr->value());
 }
 
 

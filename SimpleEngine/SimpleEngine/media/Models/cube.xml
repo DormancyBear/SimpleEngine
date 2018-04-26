@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model>
+	<vertices vertex_count="36">
+		<vertex>
+			<position value="-0.500000 0.500000 -0.500000"/>
+			<texcoord value="0.001992 0.001992"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 -0.500000 -0.500000"/>
+			<texcoord value="0.998008 0.998008"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 -0.500000 -0.500000"/>
+			<texcoord value="0.001992 0.998008"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 0.500000 -0.500000"/>
+			<texcoord value="0.998008 0.001992"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 -0.500000 -0.500000"/>
+			<texcoord value="0.998008 0.998008"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 0.500000 -0.500000"/>
+			<texcoord value="0.001992 0.001992"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 0.500000 0.500000"/>
+			<texcoord value="0.001992 0.001992"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 0.500000 -0.500000"/>
+			<texcoord value="0.998008 0.998008"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 0.500000 -0.500000"/>
+			<texcoord value="0.001992 0.998008"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 0.500000 0.500000"/>
+			<texcoord value="0.998008 0.001992"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 0.500000 -0.500000"/>
+			<texcoord value="0.998008 0.998008"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 0.500000 0.500000"/>
+			<texcoord value="0.001992 0.001992"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 -0.500000 0.500000"/>
+			<texcoord value="0.998008 0.998008"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 0.500000 0.500000"/>
+			<texcoord value="0.001992 0.001992"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 0.500000 0.500000"/>
+			<texcoord value="0.998008 0.001992"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 -0.500000 0.500000"/>
+			<texcoord value="0.001992 0.998008"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 0.500000 0.500000"/>
+			<texcoord value="0.001992 0.001992"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 -0.500000 0.500000"/>
+			<texcoord value="0.998008 0.998008"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 -0.500000 -0.500000"/>
+			<texcoord value="0.001992 0.001992"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 -0.500000 0.500000"/>
+			<texcoord value="0.998008 0.998008"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 -0.500000 0.500000"/>
+			<texcoord value="0.001992 0.998008"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 -0.500000 -0.500000"/>
+			<texcoord value="0.998008 0.001992"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 -0.500000 0.500000"/>
+			<texcoord value="0.998008 0.998008"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 -0.500000 -0.500000"/>
+			<texcoord value="0.001992 0.001992"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 0.500000 -0.500000"/>
+			<texcoord value="0.001992 0.001992"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 -0.500000 0.500000"/>
+			<texcoord value="0.998008 0.998008"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 -0.500000 -0.500000"/>
+			<texcoord value="0.001992 0.998008"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 0.500000 0.500000"/>
+			<texcoord value="0.998008 0.001992"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 -0.500000 0.500000"/>
+			<texcoord value="0.998008 0.998008"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="0.500000 0.500000 -0.500000"/>
+			<texcoord value="0.001992 0.001992"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 0.500000 0.500000"/>
+			<texcoord value="0.001992 0.001992"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 -0.500000 -0.500000"/>
+			<texcoord value="0.998008 0.998008"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 -0.500000 0.500000"/>
+			<texcoord value="0.001992 0.998008"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 0.500000 -0.500000"/>
+			<texcoord value="0.998008 0.001992"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 -0.500000 -0.500000"/>
+			<texcoord value="0.998008 0.998008"/>
+			<normal value="0.000000 0.000000 -1.000000"/>
+		</vertex>
+		<vertex>
+			<position value="-0.500000 0.500000 0.500000"/>
+			<texcoord value="0.001992 0.001992"/>
+			<normal value="0.000000 1.000000 -0.000000"/>
+		</vertex>
+	</vertices>
+</model>
+

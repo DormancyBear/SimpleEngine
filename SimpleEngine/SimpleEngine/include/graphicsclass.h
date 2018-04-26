@@ -21,7 +21,7 @@
 /////////////
 // GLOBALS //
 /////////////
-const bool FULL_SCREEN = true;
+const bool FULL_SCREEN = false;	// 全屏模式下无法调试 Orz
 const bool VSYNC_ENABLED = false;	// 垂直同步, 限制在60帧
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.1f;

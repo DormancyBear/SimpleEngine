@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include "rapidxml.hpp"
 
 
@@ -31,6 +32,8 @@ namespace XmlHelper
 		XMLAttribute(rapidxml::xml_attribute<char>* attr);
 		XMLAttribute(rapidxml::xml_document<char>& doc, char* name, char* value);
 
+		std::string Value() const;
+
 		rapidxml::xml_attribute<char>* GetStoredXmlAttribute();
 
 	private:
@@ -43,8 +46,13 @@ namespace XmlHelper
 		XMLNode(rapidxml::xml_node<char>* node);	// 读取
 		XMLNode(rapidxml::xml_document<char>& doc, XMLNodeType type, char* name);	// 写入
 
-		void AppendNode(XMLNode* const & node);
-		void AppendAttribute(XMLAttribute* const & attr);
+		void AppendNode(std::shared_ptr<XMLNode> const & node);
+		void AppendAttribute(std::shared_ptr<XMLAttribute> const & attr);
+
+		std::shared_ptr<XMLNode> FirstNode(std::string name) const;
+		std::shared_ptr<XMLNode> NextSibling(std::string name) const;
+
+		std::shared_ptr<XMLAttribute> FirstAttribute(std::string name) const;
 		
 		rapidxml::xml_node<char>* GetStoredXmlNode();
 
@@ -60,20 +68,21 @@ namespace XmlHelper
 		XMLDocument();
 
 		// 解析一个 xml 文件
-		XMLNode* Parse(const char *filename);
+		std::shared_ptr<XMLNode> Parse(const char *filename);
 
 		// 存为一个 xml 文件
 		void Save(const char *filename);
 
-		XMLNode* AllocateNode(XMLNodeType type, std::string name);
-		XMLAttribute* AllocateAttribute(std::string name, std::string value);
+		std::shared_ptr<XMLNode> AllocateNode(XMLNodeType type, std::string name);
+		std::shared_ptr<XMLAttribute> AllocateAttribute(std::string name, std::string value);
 
-		void AssignRootNode(XMLNode* const & root_node);
+		// 一个 xml 文件只有一个根节点
+		void AssignRootNode(std::shared_ptr<XMLNode> const & root_node);
 
 	private:
 		std::vector<char> xml_content;
-		rapidxml::xml_document<char>* _doc;
-		XMLNode* _root;
+		std::shared_ptr<rapidxml::xml_document<char>> _doc;
+		std::shared_ptr<XMLNode> _root;
 	};
 
 }
