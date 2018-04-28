@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{E56E4065-FD4F-4F80-880B-3A3DFFDD0BC1}</ProjectGuid>
-    <RootNamespace>SimpleEngine</RootNamespace>
+    <ProjectGuid>{3D5B1E5D-1C0D-4AD0-A8A4-937AA863DA6D}</ProjectGuid>
+    <RootNamespace>ModelImporter</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -29,14 +29,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -69,30 +69,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>../Debug;D:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./Common/XmlHelper/include;D:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>XmlHelper.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-    </ClCompile>
-  </ItemDefinitionGroup>
+  <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -100,14 +77,30 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./Common/XmlHelper/include;$(DXSDK_DIR)\Include;.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>./include;./Assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>XmlHelper.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)\Lib\x86;../Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>./Assimp/Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -116,6 +109,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -123,49 +117,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\bitmapclass.h" />
-    <ClInclude Include="include\cameraclass.h" />
-    <ClInclude Include="include\cpuclass.h" />
-    <ClInclude Include="include\d3dclass.h" />
-    <ClInclude Include="include\fontclass.h" />
-    <ClInclude Include="include\fpsclass.h" />
-    <ClInclude Include="include\graphicsclass.h" />
-    <ClInclude Include="include\inputclass.h" />
-    <ClInclude Include="include\lightclass.h" />
-    <ClInclude Include="include\lightshaderclass.h" />
-    <ClInclude Include="include\modelclass.h" />
-    <ClInclude Include="include\shaderclass.h" />
-    <ClInclude Include="include\soundclass.h" />
-    <ClInclude Include="include\systemclass.h" />
-    <ClInclude Include="include\textclass.h" />
-    <ClInclude Include="include\textureclass.h" />
-    <ClInclude Include="include\timerclass.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\bitmapclass.cpp" />
-    <ClCompile Include="src\cameraclass.cpp" />
-    <ClCompile Include="src\cpuclass.cpp" />
-    <ClCompile Include="src\d3dclass.cpp" />
-    <ClCompile Include="src\fontclass.cpp" />
-    <ClCompile Include="src\fpsclass.cpp" />
-    <ClCompile Include="src\graphicsclass.cpp" />
-    <ClCompile Include="src\inputclass.cpp" />
-    <ClCompile Include="src\lightclass.cpp" />
-    <ClCompile Include="src\lightshaderclass.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\modelclass.cpp" />
-    <ClCompile Include="src\shaderclass.cpp" />
-    <ClCompile Include="src\soundclass.cpp" />
-    <ClCompile Include="src\systemclass.cpp" />
-    <ClCompile Include="src\textclass.cpp" />
-    <ClCompile Include="src\textureclass.cpp" />
-    <ClCompile Include="src\timerclass.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="media\RenderFX\font.ps" />
-    <None Include="media\RenderFX\font.vs" />
-    <None Include="media\RenderFX\light.ps" />
-    <None Include="media\RenderFX\light.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

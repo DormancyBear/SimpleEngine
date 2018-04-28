@@ -10,5 +10,6 @@
 *_vc*_*_*
 .vs
 Debug
+Release
 shader-error.txt
 *.bak

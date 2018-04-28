@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{B23014
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XmlHelper", "SimpleEngine\Common\XmlHelper\XmlHelper.vcxproj", "{1B2D9193-53A8-4103-8668-7AB382E72A98}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelImporter", "SimpleEngine\Tools\ModelImporter\ModelImporter.vcxproj", "{3D5B1E5D-1C0D-4AD0-A8A4-937AA863DA6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -48,6 +50,14 @@ Global
 		{1B2D9193-53A8-4103-8668-7AB382E72A98}.Release|x64.Build.0 = Release|x64
 		{1B2D9193-53A8-4103-8668-7AB382E72A98}.Release|x86.ActiveCfg = Release|Win32
 		{1B2D9193-53A8-4103-8668-7AB382E72A98}.Release|x86.Build.0 = Release|Win32
+		{3D5B1E5D-1C0D-4AD0-A8A4-937AA863DA6D}.Debug|x64.ActiveCfg = Debug|x64
+		{3D5B1E5D-1C0D-4AD0-A8A4-937AA863DA6D}.Debug|x64.Build.0 = Debug|x64
+		{3D5B1E5D-1C0D-4AD0-A8A4-937AA863DA6D}.Debug|x86.ActiveCfg = Debug|Win32
+		{3D5B1E5D-1C0D-4AD0-A8A4-937AA863DA6D}.Debug|x86.Build.0 = Debug|Win32
+		{3D5B1E5D-1C0D-4AD0-A8A4-937AA863DA6D}.Release|x64.ActiveCfg = Release|x64
+		{3D5B1E5D-1C0D-4AD0-A8A4-937AA863DA6D}.Release|x64.Build.0 = Release|x64
+		{3D5B1E5D-1C0D-4AD0-A8A4-937AA863DA6D}.Release|x86.ActiveCfg = Release|Win32
+		{3D5B1E5D-1C0D-4AD0-A8A4-937AA863DA6D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +65,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0BE99492-7674-48B7-8C76-E1D6E38D06B3} = {5D50E991-C820-4E60-BEDC-F6553EDDEE4C}
 		{1B2D9193-53A8-4103-8668-7AB382E72A98} = {B23014AF-3F04-4669-836F-FD7C96A7793A}
+		{3D5B1E5D-1C0D-4AD0-A8A4-937AA863DA6D} = {5D50E991-C820-4E60-BEDC-F6553EDDEE4C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D001287D-0BD7-4C07-BB60-2BE903D9216D}
