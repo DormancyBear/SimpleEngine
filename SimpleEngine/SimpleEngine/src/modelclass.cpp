@@ -6,34 +6,9 @@
 #include <sstream>
 
 
-template<typename Out>
-void split(const std::string &s, char delim, Out result, int size)
-{
-	std::stringstream ss(s);
-	std::string item;
-
-	for (size_t i = 0; i < size; i++)
-	{
-		if (std::getline(ss, item, delim))
-		{
-			*(result++) = item;
-		}
-	}
-}
-
-std::vector<std::string> split(const std::string &s, char delim, int size) {
-	std::vector<std::string> elems;
-	split(s, delim, std::back_inserter(elems), size);
-	return elems;
-}
-
-
 ModelClass::ModelClass()
 {
-	m_vertexBuffer = 0;
-	m_indexBuffer = 0;
 	m_Texture = 0;
-	m_model = 0;
 }
 
 
@@ -47,25 +22,23 @@ ModelClass::~ModelClass()
 }
 
 
-bool ModelClass::Initialize(ID3D11Device* device, char* modelFilename, WCHAR* textureFilename)
+bool ModelClass::Initialize(ID3D11Device* device, std::string modelFilename, WCHAR* textureFilename)
 {
 	bool result;
 
 
 	// Load in the model data,
-	result = LoadModel(modelFilename);
-	if (!result)
-	{
-		return false;
-	}
+	LoadModel(modelFilename);
 
-	// Initialize the vertex and index buffers.
-	result = InitializeBuffers(device);
-	if(!result)
+	for (size_t i = 0; i < m_model.size(); i++)
 	{
-		return false;
+		result = m_model[i].InitializeBuffers(device);
+		if (!result)
+		{
+			return false;
+		}
 	}
-
+	
 	// Load the texture for this model.
 	result = LoadTexture(device, textureFilename);
 	if(!result)
@@ -82,161 +55,24 @@ void ModelClass::Shutdown()
 	// Release the model texture.
 	ReleaseTexture();
 
-	// Shutdown the vertex and index buffers.
-	ShutdownBuffers();
-
-	// Release the model data.
-	ReleaseModel();
-
 	return;
 }
 
 
-void ModelClass::Render(ID3D11DeviceContext* deviceContext)
+void ModelClass::Render(ID3D11DeviceContext* deviceContext, LightShaderClass* shader)
 {
-	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	RenderBuffers(deviceContext);
+	for (size_t i = 0; i < m_model.size(); i++)
+	{
+		m_model[i].RenderBuffers(deviceContext);
 
-	return;
-}
-
-
-int ModelClass::GetIndexCount()
-{
-	return m_indexCount;
+		shader->Render(deviceContext, m_model[i].GetIndexCount());
+	}
 }
 
 
 ID3D11ShaderResourceView* ModelClass::GetTexture()
 {
 	return m_Texture->GetTexture();
-}
-
-
-bool ModelClass::InitializeBuffers(ID3D11Device* device)
-{
-	VertexType* vertices;
-	unsigned long* indices;
-	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-    D3D11_SUBRESOURCE_DATA vertexData, indexData;
-	HRESULT result;
-
-
-	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
-	if(!vertices)
-	{
-		return false;
-	}
-
-	// Create the index array.
-	indices = new unsigned long[m_indexCount];
-	if(!indices)
-	{
-		return false;
-	}
-
-	// Load the vertex array and index array with data.
-	for (int i = 0; i<m_vertexCount; i++)
-	{
-		vertices[i].position = D3DXVECTOR3(m_model[i].x, m_model[i].y, m_model[i].z);
-		vertices[i].texture = D3DXVECTOR2(m_model[i].tu, m_model[i].tv);
-		vertices[i].normal = D3DXVECTOR3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
-
-		indices[i] = i;
-	}
-
-	// Set up the description of the static vertex buffer.
-    vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
-    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vertexBufferDesc.CPUAccessFlags = 0;
-    vertexBufferDesc.MiscFlags = 0;
-	vertexBufferDesc.StructureByteStride = 0;
-
-	// Give the subresource structure a pointer to the vertex data.
-    vertexData.pSysMem = vertices;
-	vertexData.SysMemPitch = 0;
-	vertexData.SysMemSlicePitch = 0;
-
-	// Now create the vertex buffer.
-    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
-	if(FAILED(result))
-	{
-		return false;
-	}
-
-	// Set up the description of the static index buffer.
-    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
-    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    indexBufferDesc.CPUAccessFlags = 0;
-    indexBufferDesc.MiscFlags = 0;
-	indexBufferDesc.StructureByteStride = 0;
-
-	// Give the subresource structure a pointer to the index data.
-    indexData.pSysMem = indices;
-	indexData.SysMemPitch = 0;
-	indexData.SysMemSlicePitch = 0;
-
-	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
-	if(FAILED(result))
-	{
-		return false;
-	}
-
-	// Release the arrays now that the vertex and index buffers have been created and loaded.
-	delete [] vertices;
-	vertices = 0;
-
-	delete [] indices;
-	indices = 0;
-
-	return true;
-}
-
-
-void ModelClass::ShutdownBuffers()
-{
-	// Release the index buffer.
-	if(m_indexBuffer)
-	{
-		m_indexBuffer->Release();
-		m_indexBuffer = 0;
-	}
-
-	// Release the vertex buffer.
-	if(m_vertexBuffer)
-	{
-		m_vertexBuffer->Release();
-		m_vertexBuffer = 0;
-	}
-
-	return;
-}
-
-
-void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
-{
-	unsigned int stride;
-	unsigned int offset;
-
-
-	// Set vertex buffer stride and offset.
-	stride = sizeof(VertexType); 
-	offset = 0;
-    
-	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-
-    // Set the index buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-    // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	return;
 }
 
 
@@ -277,70 +113,189 @@ void ModelClass::ReleaseTexture()
 }
 
 
-bool ModelClass::LoadModel(char* filename)
+void ModelClass::LoadModel(std::string fileName)
 {
 	XmlHelper::XMLDocument model_doc;
-	std::shared_ptr<XmlHelper::XMLNode> root_node = model_doc.Parse(filename);
+	std::shared_ptr<XmlHelper::XMLNode> root_node = model_doc.Parse(fileName);
+	int mesh_count = std::stoi(root_node->FirstAttribute("mesh_count")->Value());
+	m_model.resize(mesh_count);
 
-	std::shared_ptr<XmlHelper::XMLNode> vertices_node = root_node->FirstNode("vertices");
-	if (vertices_node != nullptr)
+	std::shared_ptr<XmlHelper::XMLNode> mesh_node = root_node->FirstNode("mesh");
+	// 循环处理所有 mesh 节点
+	for (size_t i = 0; i < mesh_count, mesh_node != nullptr; i++, mesh_node = mesh_node->NextSibling("mesh"))
 	{
-		m_vertexCount = std::stoi(vertices_node->FirstAttribute("vertex_count")->Value());
-	}
-	else
-	{
-		m_vertexCount = 0;
-	}
+		std::shared_ptr<XmlHelper::XMLNode> vertices_node = mesh_node->FirstNode("vertices");
+		int vertex_count = std::stoi(vertices_node->FirstAttribute("vertex_count")->Value());
+		m_model[i].vertices.resize(vertex_count);
+
+		std::shared_ptr<XmlHelper::XMLNode> vertex_node = vertices_node->FirstNode("vertex");
+		for (size_t j = 0; j < vertex_count, vertex_node != nullptr; j++, vertex_node = vertex_node->NextSibling("vertex"))
+		{
+			std::shared_ptr<XmlHelper::XMLNode> position_node = vertex_node->FirstNode("position");
+			{
+				std::shared_ptr<XmlHelper::XMLNode> x_node = position_node->FirstNode("x");
+				float x_coord = std::stof(x_node->FirstAttribute("value")->Value());
+
+				std::shared_ptr<XmlHelper::XMLNode> y_node = position_node->FirstNode("y");
+				float y_coord = std::stof(y_node->FirstAttribute("value")->Value());
+
+				std::shared_ptr<XmlHelper::XMLNode> z_node = position_node->FirstNode("z");
+				float z_coord = std::stof(z_node->FirstAttribute("value")->Value());
+
+
+				m_model[i].vertices[j].position = D3DXVECTOR3(x_coord, y_coord, z_coord);
+			}
+
+			std::shared_ptr<XmlHelper::XMLNode> normal_node = vertex_node->FirstNode("normal");
+			{
+				std::shared_ptr<XmlHelper::XMLNode> x_node = normal_node->FirstNode("x");
+				float x_coord = std::stof(x_node->FirstAttribute("value")->Value());
+
+				std::shared_ptr<XmlHelper::XMLNode> y_node = normal_node->FirstNode("y");
+				float y_coord = std::stof(y_node->FirstAttribute("value")->Value());
+
+				std::shared_ptr<XmlHelper::XMLNode> z_node = normal_node->FirstNode("z");
+				float z_coord = std::stof(z_node->FirstAttribute("value")->Value());
+
+				m_model[i].vertices[j].normal = D3DXVECTOR3(x_coord, y_coord, z_coord);
+			}
+
+			std::shared_ptr<XmlHelper::XMLNode> texcoord_node = vertex_node->FirstNode("texcoord");
+			{
+				std::shared_ptr<XmlHelper::XMLNode> u_node = texcoord_node->FirstNode("u");
+				float u_coord = std::stof(u_node->FirstAttribute("value")->Value());
+
+				std::shared_ptr<XmlHelper::XMLNode> v_node = texcoord_node->FirstNode("v");
+				float v_coord = std::stof(v_node->FirstAttribute("value")->Value());
+
+				m_model[i].vertices[j].texcoord = D3DXVECTOR2(u_coord, v_coord);
+			}
+		}
 	
-	// Set the number of indices to be the same as the vertex count.
-	m_indexCount = m_vertexCount;
 
-	// Create the model using the vertex count that was read in.
-	m_model = new ModelType[m_vertexCount];
-	if (!m_model)
+		std::shared_ptr<XmlHelper::XMLNode> faces_node = mesh_node->FirstNode("faces");
+		if (faces_node != nullptr)
+		{
+			std::shared_ptr<XmlHelper::XMLNode> face_node = faces_node->FirstNode("face");
+			while (face_node != nullptr)
+			{
+				std::shared_ptr<XmlHelper::XMLNode> index_node = face_node->FirstNode("index");
+				while (index_node != nullptr)
+				{
+					int index = std::stoi(index_node->FirstAttribute("value")->Value());
+					m_model[i].indices.push_back(index);
+
+					index_node = index_node->NextSibling("index");
+				}
+
+				face_node = face_node->NextSibling("face");
+			}
+		}
+	}
+}
+
+
+MeshType::MeshType()
+	:m_vertexBuffer(nullptr), m_indexBuffer(nullptr)
+{
+	//
+}
+
+
+MeshType::~MeshType()
+{
+	// Release the index buffer.
+	if (m_indexBuffer)
+	{
+		m_indexBuffer->Release();
+		m_indexBuffer = nullptr;
+	}
+
+	// Release the vertex buffer.
+	if (m_vertexBuffer)
+	{
+		m_vertexBuffer->Release();
+		m_vertexBuffer = nullptr;
+	}
+}
+
+
+// Initialize the vertex and index buffers.
+bool MeshType::InitializeBuffers(ID3D11Device* device)
+{
+	// Set up the description of the static vertex buffer.
+	D3D11_BUFFER_DESC vertexBufferDesc;
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = sizeof(VertexType) * vertices.size();
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the vertex data.
+	D3D11_SUBRESOURCE_DATA vertexData;
+	vertexData.pSysMem = &vertices[0];
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+
+	// Now create the vertex buffer.
+	HRESULT result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
+	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// Read in the vertex data.
-	std::shared_ptr<XmlHelper::XMLNode> vertex_node = vertices_node->FirstNode("vertex");
-	for (size_t i = 0; i < m_vertexCount, vertex_node != nullptr; i++)
+	// Set up the description of the static index buffer.
+	D3D11_BUFFER_DESC indexBufferDesc;
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth = sizeof(unsigned int) * indices.size();
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.StructureByteStride = 0;
+
+	// Give the subresource structure a pointer to the index data.
+	D3D11_SUBRESOURCE_DATA indexData;
+	indexData.pSysMem = &indices[0];
+	indexData.SysMemPitch = 0;
+	indexData.SysMemSlicePitch = 0;
+
+	// Create the index buffer.
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
+	if (FAILED(result))
 	{
-
-		std::shared_ptr<XmlHelper::XMLNode> position_node = vertex_node->FirstNode("position");
-		string position_value = position_node->FirstAttribute("value")->Value();
-		std::vector<std::string> position_elems = split(position_value, ' ', 3);
-		m_model[i].x = std::stof(position_elems[0]);
-		m_model[i].y = std::stof(position_elems[1]);
-		m_model[i].z = std::stof(position_elems[2]);
-
-		std::shared_ptr<XmlHelper::XMLNode> uv_node = vertex_node->FirstNode("texcoord");
-		string uv_value = uv_node->FirstAttribute("value")->Value();
-		std::vector<std::string> uv_elems = split(uv_value, ' ', 2);
-		m_model[i].tu = std::stof(uv_elems[0]);
-		m_model[i].tv = std::stof(uv_elems[1]);
-
-		std::shared_ptr<XmlHelper::XMLNode> normal_node = vertex_node->FirstNode("normal");
-		string normal_value = normal_node->FirstAttribute("value")->Value();
-		std::vector<std::string> normal_elems = split(normal_value, ' ', 3);
-		m_model[i].nx = std::stof(normal_elems[0]);
-		m_model[i].ny = std::stof(normal_elems[1]);
-		m_model[i].nz = std::stof(normal_elems[2]);
-
-		vertex_node = vertex_node->NextSibling("vertex");
+		return false;
 	}
 
 	return true;
 }
 
 
-void ModelClass::ReleaseModel()
+// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
+void MeshType::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
-	if (m_model)
-	{
-		delete[] m_model;
-		m_model = 0;
-	}
+	unsigned int stride;
+	unsigned int offset;
+
+
+	// Set vertex buffer stride and offset.
+	stride = sizeof(VertexType);
+	offset = 0;
+
+	// Set the vertex buffer to active in the input assembler so it can be rendered.
+	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+
+	// Set the index buffer to active in the input assembler so it can be rendered.
+	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	return;
+}
+
+
+int MeshType::GetIndexCount()
+{
+	return indices.size();
 }

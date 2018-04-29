@@ -68,7 +68,7 @@ namespace XmlHelper
 		XMLDocument();
 
 		// 解析一个 xml 文件
-		std::shared_ptr<XMLNode> Parse(const char *filename);
+		std::shared_ptr<XMLNode> Parse(std::string fileName);
 
 		// 存为一个 xml 文件
 		void Save(const char *filename);

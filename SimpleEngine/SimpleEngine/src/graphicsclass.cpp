@@ -240,7 +240,7 @@ bool GraphicsClass::Render(float rotation)
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_D3D->GetWorldMatrix(worldMatrix);
 	m_D3D->GetProjectionMatrix(projectionMatrix);
-	// 2D Rendering ÖÐÐèÒªÓÃ ortho matrix
+	// 2D Rendering ä¸­éœ€è¦ç”¨ ortho matrix
 	m_D3D->GetOrthoMatrix(orthoMatrix);
 
 	// first do all your 3D rendering
@@ -249,10 +249,8 @@ bool GraphicsClass::Render(float rotation)
 
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
 	D3DXMatrixRotationY(&worldMatrix, rotation);
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_Model->Render(m_D3D->GetDeviceContext());
-	// Render the model using the light shader.
-	result = m_LightShader->Render(m_D3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	
+	result = m_LightShader->SetShaderParameters(m_D3D->GetDeviceContext(), worldMatrix, viewMatrix, projectionMatrix,
 		m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)
@@ -260,7 +258,11 @@ bool GraphicsClass::Render(float rotation)
 		return false;
 	}
 
-	// ±£Ö¤ÁË 2D image ÄÜ¸²¸ÇÔÚ 3D ³¡¾°Ö®ÉÏ( Éî¶È²âÊÔ¹Ø±Õ )
+	// Render the model using the light shader.
+	m_Model->Render(m_D3D->GetDeviceContext(), m_LightShader);
+
+
+	// ä¿è¯äº† 2D image èƒ½è¦†ç›–åœ¨ 3D åœºæ™¯ä¹‹ä¸Š( æ·±åº¦æµ‹è¯•å…³é—­ )
 	// TODO: Make sure to use the painter's algorithm and draw from the back to the front to ensure you get your expected rendering output.
 	m_D3D->TurnZBufferOff();
 

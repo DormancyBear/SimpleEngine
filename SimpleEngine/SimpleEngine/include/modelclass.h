@@ -5,70 +5,68 @@
 #define _MODELCLASS_H_
 
 
-//////////////
-// INCLUDES //
-//////////////
 #include <d3d11.h>
 #include <d3dx10math.h>
-using namespace std;
-
-
-///////////////////////
-// MY CLASS INCLUDES //
-///////////////////////
+#include <vector>
 #include "textureclass.h"
+#include "lightshaderclass.h"
 
 
-// Ïñ 3DMax, Maya ÕâĞ©½¨Ä£Èí¼ş¶¼ÊÇÓÃµÄÀëÏßäÖÈ¾, ¶øÓÎÏ·ÒıÇæÔòÊÇÊµÊ±äÖÈ¾
-// Á½ÕßËùÓÃµÄ²ÄÖÊÏµÍ³ÍêÈ«²»Í¬, ×îÖÕ 3DMax Ìá¹©¸øÒıÇæµÄÖ»ÓĞÍø¸ñÄ£ĞÍ + ÌùÍ¼, ÆäËûÊı¾İ¶¼ÊÇÎŞĞ§ÈßÓàµÄ
-// ËùÒÔÎÒÃÇĞèÒª°Ñ 3DMax µ¼³öµÄ model format ×ª»»³ÉÒıÇæ×ÔÓÃµÄ format( ÌŞ³ıÎŞÓÃÊı¾İ )
-// create our own model format and write a parser to convert those different formats into our own format.
-class ModelClass
+// ä¸€ä¸ª mesh( ç½‘æ ¼ )æ˜¯å•æ¬¡æ¸²æŸ“çš„åŸºæœ¬å•ä½
+// ä¸€ä¸ªæ¨¡å‹æ˜¯ç”±å¤šä¸ª mesh ç»„æˆçš„
+class MeshType
 {
 private:
 	struct VertexType
 	{
 		D3DXVECTOR3 position;
-	    D3DXVECTOR2 texture;
 		D3DXVECTOR3 normal;
+		D3DXVECTOR2 texcoord;
 	};
 
-	struct ModelType
-	{
-		float x, y, z;
-		float tu, tv;	// Texture U, Texture V
-		float nx, ny, nz;	// Normal X, Normal Y, Normal Z
-	};
+public:
+	MeshType();
+	~MeshType();
 
+	bool InitializeBuffers(ID3D11Device*);
+	void RenderBuffers(ID3D11DeviceContext*);
+	int GetIndexCount();
+
+	std::vector<VertexType> vertices;
+	std::vector<unsigned int> indices;
+
+private:
+	ID3D11Buffer * m_vertexBuffer, *m_indexBuffer;
+};
+
+
+// åƒ 3DMax, Maya è¿™äº›å»ºæ¨¡è½¯ä»¶éƒ½æ˜¯ç”¨çš„ç¦»çº¿æ¸²æŸ“, è€Œæ¸¸æˆå¼•æ“åˆ™æ˜¯å®æ—¶æ¸²æŸ“
+// ä¸¤è€…æ‰€ç”¨çš„æè´¨ç³»ç»Ÿå®Œå…¨ä¸åŒ, æœ€ç»ˆ 3DMax æä¾›ç»™å¼•æ“çš„åªæœ‰ç½‘æ ¼æ¨¡å‹ + è´´å›¾, å…¶ä»–æ•°æ®éƒ½æ˜¯æ— æ•ˆå†—ä½™çš„
+// æ‰€ä»¥æˆ‘ä»¬éœ€è¦æŠŠ 3DMax å¯¼å‡ºçš„ model format è½¬æ¢æˆå¼•æ“è‡ªç”¨çš„ format( å‰”é™¤æ— ç”¨æ•°æ® )
+// create our own model format and write a parser to convert those different formats into our own format.
+class ModelClass
+{
 public:
 	ModelClass();
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, char*, WCHAR*);
+	bool Initialize(ID3D11Device*, std::string, WCHAR*);
 	void Shutdown();
-	void Render(ID3D11DeviceContext*);
+	void Render(ID3D11DeviceContext*, LightShaderClass*);
 
-	int GetIndexCount();
 	ID3D11ShaderResourceView* GetTexture();
 
 
 private:
-	bool InitializeBuffers(ID3D11Device*);
-	void ShutdownBuffers();
-	void RenderBuffers(ID3D11DeviceContext*);
-
 	bool LoadTexture(ID3D11Device*, WCHAR*);
 	void ReleaseTexture();
 
-	bool LoadModel(char*);
-	void ReleaseModel();
+	void LoadModel(std::string fileName);
 
 private:
-	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
-	int m_vertexCount, m_indexCount;
-	TextureClass* m_Texture;
-	ModelType* m_model;
+	TextureClass * m_Texture;
+	std::vector<MeshType> m_model;
 };
 
 #endif

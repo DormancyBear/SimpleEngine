@@ -7,21 +7,15 @@ using namespace XmlHelper;
 
 XMLDocument::XMLDocument()
 {
+	// 所有 node, attribute 都通过 xml_ducument 对象 allocate 得到( 必须保证 _doc 的生命周期 )
 	_doc = std::make_shared<rapidxml::xml_document<char>>();
-
-	// 通用 XML 声明
-	// first_node() 不把这个声明视为节点
-	rapidxml::xml_node<char>* declnode = _doc->allocate_node(rapidxml::node_declaration);
-	declnode->append_attribute(_doc->allocate_attribute("version", "1.0"));
-	declnode->append_attribute(_doc->allocate_attribute("encoding", "utf-8"));
-	_doc->append_node(declnode);
 }
 
 
-std::shared_ptr<XMLNode> XMLDocument::Parse(const char *filename)
+std::shared_ptr<XMLNode> XMLDocument::Parse(std::string fileName)
 {
 	std::ifstream inputfile;
-	inputfile.open(filename);
+	inputfile.open(fileName);
 
 	// 获取文件长度
 	inputfile.seekg(0, std::ios_base::end);
@@ -70,6 +64,12 @@ std::shared_ptr<XMLAttribute> XMLDocument::AllocateAttribute(std::string name, s
 
 void XMLDocument::AssignRootNode(std::shared_ptr<XMLNode> const & root_node)
 {
+	// 通用 XML 声明, 读 xml 时 first_node() 不把这个声明视为节点
+	rapidxml::xml_node<char>* declnode = _doc->allocate_node(rapidxml::node_declaration);
+	declnode->append_attribute(_doc->allocate_attribute("version", "1.0"));
+	declnode->append_attribute(_doc->allocate_attribute("encoding", "utf-8"));
+	_doc->append_node(declnode);
+
 	_doc->append_node(root_node->GetStoredXmlNode());
 	_root = root_node;
 }
