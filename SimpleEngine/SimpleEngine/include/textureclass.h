@@ -9,7 +9,6 @@
 // INCLUDES //
 //////////////
 #include <d3d11.h>
-#include <d3dx11tex.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -22,14 +21,14 @@ public:
 	TextureClass(const TextureClass&);
 	~TextureClass();
 
-	bool Initialize(ID3D11Device*, WCHAR*);
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext* deviceContext, WCHAR*);
 	void Shutdown();
 
 	ID3D11ShaderResourceView* GetTexture();
 
 private:
-	// 纹理是基于.png 等图片文件生成的存储了图像数据的二维数组，
-	// 纹理像素( Texture Pixel，简称 Texel， 二维数组中的一项 )与原图片中的像素点一一对应。
+	// A shader-resource view is required when binding a resource to a shader stage
+	// Examples of shader resources include a constant buffer, a texture buffer, and a texture.
 	ID3D11ShaderResourceView* m_texture;
 };
 

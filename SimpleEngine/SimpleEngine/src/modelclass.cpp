@@ -8,7 +8,7 @@
 
 ModelClass::ModelClass()
 {
-	m_Texture = 0;
+
 }
 
 
@@ -22,99 +22,48 @@ ModelClass::~ModelClass()
 }
 
 
-bool ModelClass::Initialize(ID3D11Device* device, std::string modelFilename, WCHAR* textureFilename)
+bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string modelFilename)
 {
-	bool result;
-
-
 	// Load in the model data,
-	LoadModel(modelFilename);
+	LoadModel(device, deviceContext, modelFilename);
 
 	for (size_t i = 0; i < m_model.size(); i++)
 	{
-		result = m_model[i].InitializeBuffers(device);
+		bool result = m_model[i].InitializeBuffers(device);
 		if (!result)
 		{
 			return false;
 		}
 	}
 	
-	// Load the texture for this model.
-	result = LoadTexture(device, textureFilename);
-	if(!result)
-	{
-		return false;
-	}
-
 	return true;
 }
 
 
-void ModelClass::Shutdown()
-{
-	// Release the model texture.
-	ReleaseTexture();
-
-	return;
-}
-
-
-void ModelClass::Render(ID3D11DeviceContext* deviceContext, LightShaderClass* shader)
+void ModelClass::Render(LightShaderClass* shader, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+	D3DXMATRIX projectionMatrix, D3DXVECTOR3 lightDirection, D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor,
+	 D3DXVECTOR3 cameraPosition, D3DXVECTOR4 specularColor, float specularPower)
 {
 	for (size_t i = 0; i < m_model.size(); i++)
 	{
 		m_model[i].RenderBuffers(deviceContext);
+
+		shader->SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix,
+			m_model[i].textures.size() > 0 ? m_model[i].textures[0].GetTexture() : nullptr, lightDirection, ambientColor, diffuseColor,
+			cameraPosition, specularColor, specularPower);
 
 		shader->Render(deviceContext, m_model[i].GetIndexCount());
 	}
 }
 
 
-ID3D11ShaderResourceView* ModelClass::GetTexture()
+void ModelClass::LoadModel(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string fileName)
 {
-	return m_Texture->GetTexture();
-}
+	int firstFlagIndex = fileName.find_last_of('/');
+	int secondFlagIndex = fileName.find_last_of('\\');
+	int finalFlagIndex = firstFlagIndex >= secondFlagIndex ? firstFlagIndex : secondFlagIndex;
+	m_modelDirectory = fileName.substr(0, finalFlagIndex + 1);
 
-
-bool ModelClass::LoadTexture(ID3D11Device* device, WCHAR* filename)
-{
-	bool result;
-
-
-	// Create the texture object.
-	m_Texture = new TextureClass;
-	if(!m_Texture)
-	{
-		return false;
-	}
-
-	// Initialize the texture object.
-	result = m_Texture->Initialize(device, filename);
-	if(!result)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-
-void ModelClass::ReleaseTexture()
-{
-	// Release the texture object.
-	if(m_Texture)
-	{
-		m_Texture->Shutdown();
-		delete m_Texture;
-		m_Texture = 0;
-	}
-
-	return;
-}
-
-
-void ModelClass::LoadModel(std::string fileName)
-{
 	XmlHelper::XMLDocument model_doc;
 	std::shared_ptr<XmlHelper::XMLNode> root_node = model_doc.Parse(fileName);
 	int mesh_count = std::stoi(root_node->FirstAttribute("mesh_count")->Value());
@@ -191,6 +140,35 @@ void ModelClass::LoadModel(std::string fileName)
 				face_node = face_node->NextSibling("face");
 			}
 		}
+
+
+		std::shared_ptr<XmlHelper::XMLNode> material_node = mesh_node->FirstNode("material");
+		if (material_node != nullptr)
+		{
+			std::shared_ptr<XmlHelper::XMLNode> diffuse_node = material_node->FirstNode("diffuse");
+			int diffuse_count = std::stoi(diffuse_node->FirstAttribute("diffuse_count")->Value());
+			m_model[i].textures.resize(diffuse_count);
+
+			std::shared_ptr<XmlHelper::XMLNode> texture_node = diffuse_node->FirstNode("texture");
+			for (size_t k = 0; k < vertex_count, texture_node != nullptr; k++, texture_node = texture_node->NextSibling("texture"))
+			{
+				// 从网上下载的模型文件, 可能里面的纹理路径是绝对路径, 全部转化成跟模型文件同级目录
+				std::string texture_path = texture_node->FirstAttribute("value")->Value();
+				int firstFlagIndex = texture_path.find_last_of('/');
+				int secondFlagIndex = texture_path.find_last_of('\\');
+				int finalFlagIndex = firstFlagIndex >= secondFlagIndex ? firstFlagIndex : secondFlagIndex;
+				texture_path = m_modelDirectory + texture_path.substr(finalFlagIndex + 1);
+
+				std::size_t wpath_size = texture_path.size() + 1;
+				std::vector<wchar_t> wtexture_path(wpath_size);
+				std::size_t convertedChars = 0;
+				mbstowcs_s(&convertedChars, &wtexture_path[0], wpath_size, texture_path.c_str(), _TRUNCATE);
+
+				// 每个 mesh 可能有多张纹理
+				m_model[i].textures[k].Initialize(device, deviceContext, &wtexture_path[0]);
+			}
+		}
+
 	}
 }
 
@@ -216,6 +194,11 @@ MeshType::~MeshType()
 	{
 		m_vertexBuffer->Release();
 		m_vertexBuffer = nullptr;
+	}
+
+	for (size_t i = 0; i < textures.size(); i++)
+	{
+		textures[i].Shutdown();
 	}
 }
 

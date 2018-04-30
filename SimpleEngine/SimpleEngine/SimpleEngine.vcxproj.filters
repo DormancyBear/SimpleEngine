@@ -139,5 +139,6 @@
     <None Include="media\RenderFX\light.vs">
       <Filter>Effect Files</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

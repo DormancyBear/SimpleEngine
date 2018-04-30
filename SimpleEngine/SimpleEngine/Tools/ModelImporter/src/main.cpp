@@ -82,7 +82,7 @@ void LoadModel(std::string filename)
 	// pFlags 用于指示 Assimp 自动对模型做一些处理
 	// aiProcess_Triangulate: 将多边形统统转换成三角形 =>
 	// 一些 model format 是支持五边形六边形的, 而 DX 中只支持三种图元: 点, 线和三角形, 所以需要做一个三角形转化
-	const aiScene *scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_GenNormals);
+	const aiScene *scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FixInfacingNormals);
 
 	// 场景和根节点不为空, 场景数据是否完整
 	if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
@@ -219,6 +219,31 @@ void processMesh(aiMesh *mesh, const aiScene *scene)
 			}
 		}
 		mesh_node->AppendNode(faces_node);
+
+
+		// 一个 mesh 对应一个材质, 一个 model 可拥有多个 mesh
+		if (mesh->mMaterialIndex >= 0)
+		{
+			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+			std::shared_ptr<XmlHelper::XMLNode> material_node = model_doc.AllocateNode(XmlHelper::XNT_Element, "material");
+
+			// 在一个材质对象内部, 每种纹理类型( diffuse, specular... )都对应了一个纹理数组
+			int diffuse_count = material->GetTextureCount(aiTextureType_DIFFUSE);
+			std::shared_ptr<XmlHelper::XMLNode> diffuse_node = model_doc.AllocateNode(XmlHelper::XNT_Element, "diffuse");
+			diffuse_node->AppendAttribute(model_doc.AllocateAttribute("diffuse_count", std::to_string(diffuse_count)));
+			for (size_t i = 0; i < diffuse_count; i++)
+			{
+				aiString texturePath;
+				material->GetTexture(aiTextureType_DIFFUSE, i, &texturePath);
+
+				std::shared_ptr<XmlHelper::XMLNode> texture_node = model_doc.AllocateNode(XmlHelper::XNT_Element, "texture");
+				texture_node->AppendAttribute(model_doc.AllocateAttribute("value", texturePath.C_Str()));
+				diffuse_node->AppendNode(texture_node);
+			}
+			material_node->AppendNode(diffuse_node);
+
+			mesh_node->AppendNode(material_node);
+		}
 	}
 	root_node->AppendNode(mesh_node);
 }

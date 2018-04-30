@@ -54,7 +54,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize a base view matrix with the camera for 2D user interface rendering.
-	m_Camera->SetPosition(0.0f, 0.0f, -1.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -100.0f);
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(baseViewMatrix);
 
@@ -66,7 +66,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), "./media/Models/Bayonetta(Swimsuit).xml", L"./media/Textures/2D/seafloor.dds");
+	result = m_Model->Initialize(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), "./media/Models/Bayonetta2/model.xml");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -149,7 +149,6 @@ void GraphicsClass::Shutdown()
 	// Release the model object.
 	if (m_Model)
 	{
-		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
 	}
@@ -197,7 +196,7 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int fps, int cpu, float frameT
 	}
 
 	// Set the position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 120.0f, -400.0f);
 
 	static float deltaTime = 0.0f;
 	static float rotation = 0.0f;
@@ -227,7 +226,6 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int fps, int cpu, float frameT
 bool GraphicsClass::Render(float rotation)
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
-	bool result;
 
 
 	// Clear the buffers to begin the scene.
@@ -249,17 +247,11 @@ bool GraphicsClass::Render(float rotation)
 
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
 	D3DXMatrixRotationY(&worldMatrix, rotation);
-	
-	result = m_LightShader->SetShaderParameters(m_D3D->GetDeviceContext(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(), m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
-		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
-	if (!result)
-	{
-		return false;
-	}
 
 	// Render the model using the light shader.
-	m_Model->Render(m_D3D->GetDeviceContext(), m_LightShader);
+	m_Model->Render(m_LightShader, m_D3D->GetDeviceContext(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 
 
 	// 保证了 2D image 能覆盖在 3D 场景之上( 深度测试关闭 )
@@ -271,7 +263,7 @@ bool GraphicsClass::Render(float rotation)
 
 	m_D3D->GetWorldMatrix(worldMatrix);
 	// Render the text strings.
-	result = m_Text->Render(m_D3D->GetDeviceContext(), worldMatrix, orthoMatrix);
+	bool result = m_Text->Render(m_D3D->GetDeviceContext(), worldMatrix, orthoMatrix);
 	if(!result)
 	{
 		return false;

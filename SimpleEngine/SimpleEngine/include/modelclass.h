@@ -36,6 +36,7 @@ public:
 
 	std::vector<VertexType> vertices;
 	std::vector<unsigned int> indices;
+	std::vector<TextureClass> textures;
 
 private:
 	ID3D11Buffer * m_vertexBuffer, *m_indexBuffer;
@@ -53,22 +54,17 @@ public:
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, std::string, WCHAR*);
-	void Shutdown();
-	void Render(ID3D11DeviceContext*, LightShaderClass*);
-
-	ID3D11ShaderResourceView* GetTexture();
-
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, std::string);
+	void Render(LightShaderClass* shader, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+		D3DXMATRIX projectionMatrix, D3DXVECTOR3 lightDirection, D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor,
+		D3DXVECTOR3 cameraPosition, D3DXVECTOR4 specularColor, float specularPower);
 
 private:
-	bool LoadTexture(ID3D11Device*, WCHAR*);
-	void ReleaseTexture();
-
-	void LoadModel(std::string fileName);
+	void LoadModel(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string fileName);
 
 private:
-	TextureClass * m_Texture;
 	std::vector<MeshType> m_model;
+	std::string m_modelDirectory;	// 存放模型文件的文件夹( 默认所有纹理也都放在这个目录下 )
 };
 
 #endif
