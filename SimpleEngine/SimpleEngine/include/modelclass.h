@@ -17,11 +17,13 @@
 class MeshType
 {
 private:
+	// 如何从这个 VertexType 映射到 VertexShader 里的输入结构?
+	// 答案是通过顶点布局( vertex input layout )
 	struct VertexType
 	{
 		D3DXVECTOR3 position;
-		D3DXVECTOR3 normal;
 		D3DXVECTOR2 texcoord;
+		D3DXVECTOR3 normal;
 	};
 
 public:

@@ -82,7 +82,7 @@ void LoadModel(std::string filename)
 	// pFlags 用于指示 Assimp 自动对模型做一些处理
 	// aiProcess_Triangulate: 将多边形统统转换成三角形 =>
 	// 一些 model format 是支持五边形六边形的, 而 DX 中只支持三种图元: 点, 线和三角形, 所以需要做一个三角形转化
-	const aiScene *scene = importer.ReadFile(filename, aiProcess_Triangulate);
+	const aiScene *scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_GenNormals);
 
 	// 场景和根节点不为空, 场景数据是否完整
 	if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
