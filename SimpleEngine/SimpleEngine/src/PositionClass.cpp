@@ -15,10 +15,14 @@ PositionClass::PositionClass()
 
 	m_forwardSpeed   = 0.0f;
 	m_backwardSpeed  = 0.0f;
+	m_leftSpeed	= 0.0f;
+	m_rightSpeed = 0.0f;
+
 	m_upwardSpeed    = 0.0f;
 	m_downwardSpeed  = 0.0f;
 	m_leftTurnSpeed  = 0.0f;
 	m_rightTurnSpeed = 0.0f;
+
 	m_lookUpSpeed    = 0.0f;
 	m_lookDownSpeed  = 0.0f;
 }
@@ -144,6 +148,69 @@ void PositionClass::MoveBackward(bool keydown)
 	// Update the position.
 	m_positionX -= sinf(radians) * m_backwardSpeed;
 	m_positionZ -= cosf(radians) * m_backwardSpeed;
+
+	return;
+}
+
+void PositionClass::MoveLeft(bool keydown)
+{
+	if (keydown)
+	{
+		m_leftSpeed += m_frameTime * 0.001f;
+
+		if (m_leftSpeed > (m_frameTime * 0.03f))
+		{
+			m_leftSpeed = m_frameTime * 0.03f;
+		}
+	}
+	else
+	{
+		m_leftSpeed -= m_frameTime * 0.07f;
+
+		if (m_leftSpeed < 0.0f)
+		{
+			m_leftSpeed = 0.0f;
+		}
+	}
+
+	// Convert degrees to radians.
+	float radians = m_rotationY * 0.0174532925f;
+
+	// Update the position.
+	m_positionX -= cosf(radians) * m_leftSpeed;
+	m_positionZ += sinf(radians) * m_leftSpeed;
+
+	return;
+}
+
+
+void PositionClass::MoveRight(bool keydown)
+{
+	if (keydown)
+	{
+		m_rightSpeed += m_frameTime * 0.001f;
+
+		if (m_rightSpeed > (m_frameTime * 0.03f))
+		{
+			m_rightSpeed = m_frameTime * 0.03f;
+		}
+	}
+	else
+	{
+		m_rightSpeed -= m_frameTime * 0.07f;
+
+		if (m_rightSpeed < 0.0f)
+		{
+			m_rightSpeed = 0.0f;
+		}
+	}
+
+	// Convert degrees to radians.
+	float radians = m_rotationY * 0.0174532925f;
+
+	// Update the position.
+	m_positionX += cosf(radians) * m_rightSpeed;
+	m_positionZ -= sinf(radians) * m_rightSpeed;
 
 	return;
 }

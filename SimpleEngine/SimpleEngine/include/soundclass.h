@@ -37,12 +37,12 @@ private:
 	// The header contains all the information about the audio file so we can use that to create a secondary buffer to accommodate the audio data
 	struct WaveHeaderType
 	{
-		char chunkId[4];
-		unsigned long chunkSize;
-		char format[4];
-		char subChunkId[4];
+		char chunkId[4];				// 4 bytes
+		unsigned long chunkSize;		// 4 bytes
+		char format[4];					// 4 bytes
+		char subChunkId[4];				// 4 bytes
 		unsigned long subChunkSize;
-		unsigned short audioFormat;
+		unsigned short audioFormat;		// 2 bytes
 		unsigned short numChannels;
 		unsigned long sampleRate;
 		unsigned long bytesPerSecond;

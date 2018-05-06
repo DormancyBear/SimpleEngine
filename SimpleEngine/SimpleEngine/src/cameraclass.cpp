@@ -58,39 +58,38 @@ D3DXVECTOR3 CameraClass::GetRotation()
 
 void CameraClass::Render()
 {
-	D3DXVECTOR3 up, position, lookAt;
-	float yaw, pitch, roll;
-	D3DXMATRIX rotationMatrix;
-
-
 	// Setup the vector that points upwards.
+	D3DXVECTOR3 up;
 	up.x = 0.0f;
 	up.y = 1.0f;
 	up.z = 0.0f;
 
-	// Setup the position of the camera in the world.
+	// 世界坐标系中的 camera 坐标
+	D3DXVECTOR3 position;
 	position.x = m_positionX;
 	position.y = m_positionY;
 	position.z = m_positionZ;
 
 	// Setup where the camera is looking by default.
+	D3DXVECTOR3 lookAt;
 	lookAt.x = 0.0f;
 	lookAt.y = 0.0f;
 	lookAt.z = 1.0f;
 
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
-	pitch = m_rotationX * 0.0174532925f;
-	yaw   = m_rotationY * 0.0174532925f;
-	roll  = m_rotationZ * 0.0174532925f;
+	float pitch = m_rotationX * 0.0174532925f;
+	float yaw = m_rotationY * 0.0174532925f;
+	float roll  = m_rotationZ * 0.0174532925f;
 
 	// Create the rotation matrix from the yaw, pitch, and roll values.
+	D3DXMATRIX rotationMatrix;
 	D3DXMatrixRotationYawPitchRoll(&rotationMatrix, yaw, pitch, roll);
 
 	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
 	D3DXVec3TransformCoord(&lookAt, &lookAt, &rotationMatrix);
 	D3DXVec3TransformCoord(&up, &up, &rotationMatrix);
 
-	// Translate the rotated camera position to the location of the viewer.
+	// 世界坐标系中的被观察点坐标( 指示 camera 看向的方向 )
 	lookAt = position + lookAt;
 
 	// Finally create the view matrix from the three updated vectors.

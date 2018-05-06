@@ -287,37 +287,42 @@ bool SystemClass::Frame()
 
 bool SystemClass::HandleInput(float frameTime)
 {
-	bool keyDown;
-
-
 	// Set the frame time for calculating the updated position.
 	m_Position->SetFrameTime(frameTime);
 
-	// Handle the input.
+	// 前进
+	bool keyDown = m_Input->IsWPressed();
+	m_Position->MoveForward(keyDown);
+	// 后退
+	keyDown = m_Input->IsSPressed();
+	m_Position->MoveBackward(keyDown);
+	// 左移
+	keyDown = m_Input->IsAPressed();
+	m_Position->MoveLeft(keyDown);
+	// 右移
+	keyDown = m_Input->IsDPressed();
+	m_Position->MoveRight(keyDown);
+
+	// 向上看
+	keyDown = m_Input->IsUpPressed();
+	m_Position->LookUpward(keyDown);
+	// 向下看
+	keyDown = m_Input->IsDownPressed();
+	m_Position->LookDownward(keyDown);
+	// 向左看
 	keyDown = m_Input->IsLeftPressed();
 	m_Position->TurnLeft(keyDown);
-
+	// 向右看
 	keyDown = m_Input->IsRightPressed();
 	m_Position->TurnRight(keyDown);
 
-	keyDown = m_Input->IsUpPressed();
-	m_Position->MoveForward(keyDown);
-
-	keyDown = m_Input->IsDownPressed();
-	m_Position->MoveBackward(keyDown);
-
-	keyDown = m_Input->IsWPressed();
+	// 上升
+	keyDown = m_Input->IsRPressed();
 	m_Position->MoveUpward(keyDown);
-
-	keyDown = m_Input->IsSPressed();
+	// 下降
+	keyDown = m_Input->IsFPressed();
 	m_Position->MoveDownward(keyDown);
-
-	keyDown = m_Input->IsPgUpPressed();
-	m_Position->LookUpward(keyDown);
-
-	keyDown = m_Input->IsPgDownPressed();
-	m_Position->LookDownward(keyDown);
-
+	
 	return true;
 }
 

@@ -35,7 +35,7 @@ bool SoundClass::Initialize(HWND hwnd)
 	}
 
 	// Load a wave audio file onto a secondary buffer.
-	result = LoadWaveFile("./media/Sounds/sound01.wav", &m_secondaryBuffer1);
+	result = LoadWaveFile("./media/Sounds/the_night_sky.wav", &m_secondaryBuffer1);
 	if(!result)
 	{
 		return false;
@@ -101,7 +101,7 @@ bool SoundClass::InitializeDirectSound(HWND hwnd)
 	WAVEFORMATEX waveFormat;
 	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
 	waveFormat.nSamplesPerSec = 44100;
-	waveFormat.wBitsPerSample = 16;
+	waveFormat.wBitsPerSample = 24;
 	waveFormat.nChannels = 2;
 	waveFormat.nBlockAlign = (waveFormat.wBitsPerSample / 8) * waveFormat.nChannels;
 	waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
@@ -202,7 +202,7 @@ bool SoundClass::LoadWaveFile(char* filename, IDirectSoundBuffer8** secondaryBuf
 	}
 
 	// Ensure that the wave file was recorded in 16 bit format.
-	if(waveFileHeader.bitsPerSample != 16)
+	if(waveFileHeader.bitsPerSample != 24)
 	{
 		return false;
 	}
@@ -218,7 +218,7 @@ bool SoundClass::LoadWaveFile(char* filename, IDirectSoundBuffer8** secondaryBuf
 	WAVEFORMATEX waveFormat;
 	waveFormat.wFormatTag = WAVE_FORMAT_PCM;
 	waveFormat.nSamplesPerSec = 44100;
-	waveFormat.wBitsPerSample = 16;
+	waveFormat.wBitsPerSample = 24;
 	waveFormat.nChannels = 2;
 	waveFormat.nBlockAlign = (waveFormat.wBitsPerSample / 8) * waveFormat.nChannels;
 	waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
