@@ -11,9 +11,6 @@
 #include "assimp/postprocess.h"
 #include "XmlHelper.h"
 
-
-#pragma comment(lib, "assimp-vc140-mt.lib")
-#pragma comment(lib, "zlibstatic.lib")
 #pragma comment(lib, "XmlHelper.lib")
 
 
@@ -79,15 +76,18 @@ void LoadModel(std::string filename)
 {
 	Assimp::Importer importer;
 
-	// pFlags 用于指示 Assimp 自动对模型做一些处理
-	// aiProcess_Triangulate: 将多边形统统转换成三角形 =>
-	// 一些 model format 是支持五边形六边形的, 而 DX 中只支持三种图元: 点, 线和三角形, 所以需要做一个三角形转化
-	const aiScene *scene = importer.ReadFile(filename, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FixInfacingNormals);
+	// pFlags 用于指示 Assimp 自动对模型做一些处理 =>
+	// aiProcess_Triangulate: 将多边形统统转换成三角形, 一些建模软件是支持五边形六边形的, 而 DX 中我们只渲染三角形
+	// aiProcess_FixInfacingNormals: 建模软件往往是双面显示, 而 DX 将顺时针视为正面
+	// aiProcess_ConvertToLeftHanded: 大部分建模软件都是右手坐标系, 而 DX 本身是左手坐标系
+	const aiScene *scene = importer.ReadFile(filename,
+		aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FixInfacingNormals | aiProcess_ConvertToLeftHanded);
 
 	// 场景和根节点不为空, 场景数据是否完整
 	if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)
 	{
 		std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
+		system("pause");
 		return;
 	}
 

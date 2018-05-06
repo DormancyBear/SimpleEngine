@@ -5,7 +5,9 @@
 
 
 #include "d3dclass.h"
-#include "lightshaderclass.h"
+#include "LightShaderClass.h"
+#include "DepthShaderClass.h"
+#include "ShadowShaderClass.h"
 
 
 // facade pattern
@@ -23,8 +25,16 @@ public:
 	bool RenderLightShader(ID3D11DeviceContext*, int, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, ID3D11ShaderResourceView*,
 		D3DXVECTOR3, D3DXVECTOR4, D3DXVECTOR4, D3DXVECTOR3, D3DXVECTOR4, float);
 
+	bool RenderDepthShader(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+		D3DXMATRIX projectionMatrix);
+
+	bool RenderShadowShader(ID3D11DeviceContext*, int, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, D3DXMATRIX, ID3D11ShaderResourceView*,
+		ID3D11ShaderResourceView*, D3DXVECTOR3, D3DXVECTOR4, D3DXVECTOR4);
+
 private:
 	LightShaderClass* m_LightShader;
+	DepthShaderClass* m_DepthShader;
+	ShadowShaderClass* m_ShadowShader;
 };
 
 

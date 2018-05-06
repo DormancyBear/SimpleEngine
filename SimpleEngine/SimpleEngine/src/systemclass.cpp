@@ -1,7 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: systemclass.cpp
-////////////////////////////////////////////////////////////////////////////////
-#include "systemclass.h"
+#include "SystemClass.h"
 
 
 SystemClass::SystemClass()
@@ -12,6 +9,7 @@ SystemClass::SystemClass()
 	m_Fps = 0;
 	m_Cpu = 0;
 	m_Timer = 0;
+	m_Position = 0;
 }
 
 
@@ -102,6 +100,7 @@ bool SystemClass::Initialize()
 	// Initialize the cpu object.
 	m_Cpu->Initialize();
 
+
 	// Create the timer object.
 	m_Timer = new TimerClass;
 	if (!m_Timer)
@@ -117,12 +116,30 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
+
+	// Create the position object.
+	m_Position = new PositionClass;
+	if (!m_Position)
+	{
+		return false;
+	}
+
+	// Set the initial position of the viewer to the same as the initial camera position.
+	m_Position->SetPosition(0.0f, 2.0f, -10.0f);
+
 	return true;
 }
 
 
 void SystemClass::Shutdown()
 {
+	// Release the position object.
+	if (m_Position)
+	{
+		delete m_Position;
+		m_Position = 0;
+	}
+
 	// Release the timer object.
 	if (m_Timer)
 	{
@@ -207,16 +224,10 @@ void SystemClass::Run()
 			result = Frame();
 			if(!result)
 			{
-				MessageBox(m_hwnd, L"Frame Processing Failed", L"Error", MB_OK);
 				done = true;
 			}
 		}
 
-		// Check if the user pressed escape and wants to quit.
-		if(m_Input->IsEscapePressed() == true)
-		{
-			done = true;
-		}
 	}
 
 	return;
@@ -229,11 +240,6 @@ bool SystemClass::Frame()
 	int mouseX, mouseY;
 
 
-	// Update the system stats.
-	m_Timer->Frame();
-	m_Fps->Frame();
-	m_Cpu->Frame();
-
 	// Do the input frame processing.
 	result = m_Input->Frame();
 	if(!result)
@@ -241,15 +247,76 @@ bool SystemClass::Frame()
 		return false;
 	}
 
+	// Check if the user pressed escape and wants to exit the application.
+	if (m_Input->IsEscapePressed() == true)
+	{
+		return false;
+	}
+
+	// Update the system stats.
+	m_Timer->Frame();
+	m_Fps->Frame();
+	m_Cpu->Frame();
+
+	// Do the frame input processing.
+	result = HandleInput(m_Timer->GetTime());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Get the view point position/rotation.
+	float posX, posY, posZ, rotX, rotY, rotZ;
+	m_Position->GetPosition(posX, posY, posZ);
+	m_Position->GetRotation(rotX, rotY, rotZ);
+
 	// Get the location of the mouse from the input object,
 	m_Input->GetMouseLocation(mouseX, mouseY);
 
 	// Do the frame processing for the graphics object.
-	result = m_Graphics->Frame(mouseX, mouseY, m_Fps->GetFps(), m_Cpu->GetCpuPercentage(), m_Timer->GetTime());
+	result = m_Graphics->Frame(mouseX, mouseY, m_Fps->GetFps(), m_Cpu->GetCpuPercentage(), m_Timer->GetTime(),
+		posX, posY, posZ, rotX, rotY, rotZ);
 	if(!result)
 	{
 		return false;
 	}
+
+	return true;
+}
+
+
+bool SystemClass::HandleInput(float frameTime)
+{
+	bool keyDown;
+
+
+	// Set the frame time for calculating the updated position.
+	m_Position->SetFrameTime(frameTime);
+
+	// Handle the input.
+	keyDown = m_Input->IsLeftPressed();
+	m_Position->TurnLeft(keyDown);
+
+	keyDown = m_Input->IsRightPressed();
+	m_Position->TurnRight(keyDown);
+
+	keyDown = m_Input->IsUpPressed();
+	m_Position->MoveForward(keyDown);
+
+	keyDown = m_Input->IsDownPressed();
+	m_Position->MoveBackward(keyDown);
+
+	keyDown = m_Input->IsWPressed();
+	m_Position->MoveUpward(keyDown);
+
+	keyDown = m_Input->IsSPressed();
+	m_Position->MoveDownward(keyDown);
+
+	keyDown = m_Input->IsPgUpPressed();
+	m_Position->LookUpward(keyDown);
+
+	keyDown = m_Input->IsPgDownPressed();
+	m_Position->LookDownward(keyDown);
 
 	return true;
 }

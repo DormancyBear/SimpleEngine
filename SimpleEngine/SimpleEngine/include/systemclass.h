@@ -1,8 +1,7 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: systemclass.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _SYSTEMCLASS_H_
 #define _SYSTEMCLASS_H_
+
+#pragma once
 
 
 ///////////////////////////////
@@ -20,17 +19,15 @@
 ///////////////////////
 // MY CLASS INCLUDES //
 ///////////////////////
-#include "inputclass.h"
+#include "InputClass.h"
 #include "GraphicsClass.h"
 #include "soundclass.h"
 #include "fpsclass.h"
 #include "cpuclass.h"
 #include "timerclass.h"
+#include "PositionClass.h"
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Class name: SystemClass
-////////////////////////////////////////////////////////////////////////////////
 class SystemClass
 {
 public:
@@ -46,6 +43,7 @@ public:
 
 private:
 	bool Frame();
+	bool HandleInput(float);
 	void InitializeWindows(int&, int&);
 	void ShutdownWindows();
 
@@ -60,6 +58,7 @@ private:
 	FpsClass* m_Fps;
 	CpuClass* m_Cpu;
 	TimerClass* m_Timer;
+	PositionClass* m_Position;
 };
 
 

@@ -1,7 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: modelclass.cpp
-////////////////////////////////////////////////////////////////////////////////
-#include "modelclass.h"
+#include "ModelClass.h"
 #include "XmlHelper.h"
 #include <sstream>
 
@@ -40,18 +37,64 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 }
 
 
-void ModelClass::Render(ShaderManagerClass* shader, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
-	D3DXMATRIX projectionMatrix, D3DXVECTOR3 lightDirection, D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor,
-	 D3DXVECTOR3 cameraPosition, D3DXVECTOR4 specularColor, float specularPower)
+void ModelClass::RenderLightShader(ShaderManagerClass* shaderMgr, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+	D3DXMATRIX projectionMatrix, D3DXVECTOR3 lightDirection, D3DXVECTOR4 ambientColor,
+	D3DXVECTOR4 diffuseColor, D3DXVECTOR3 cameraPosition, D3DXVECTOR4 specularColor, float specularPower)
 {
 	for (size_t i = 0; i < m_model.size(); i++)
 	{
 		m_model[i].RenderBuffers(deviceContext);
 
-		shader->RenderLightShader(deviceContext, m_model[i].GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-			m_model[i].textures.size() > 0 ? m_model[i].textures[0].GetTexture() : nullptr, lightDirection, ambientColor, diffuseColor,
-			cameraPosition, specularColor, specularPower);
+		shaderMgr->RenderLightShader(deviceContext, m_model[i].GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+			m_model[i].textures.size() > 0 ? m_model[i].textures[0].GetTexture() : nullptr,
+			lightDirection, ambientColor, diffuseColor, cameraPosition, specularColor, specularPower);
 	}
+}
+
+
+void ModelClass::RenderDepthShader(ShaderManagerClass* shaderMgr, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+	D3DXMATRIX projectionMatrix)
+{
+	for (size_t i = 0; i < m_model.size(); i++)
+	{
+		m_model[i].RenderBuffers(deviceContext);
+
+		shaderMgr->RenderDepthShader(deviceContext, m_model[i].GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	}
+}
+
+
+void ModelClass::RenderShadowShader(ShaderManagerClass* shaderMgr, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+	D3DXMATRIX projectionMatrix, D3DXMATRIX lightViewMatrix, D3DXMATRIX lightProjectionMatrix,
+	ID3D11ShaderResourceView* depthMapTexture, D3DXVECTOR3 lightPosition, D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor)
+{
+	for (size_t i = 0; i < m_model.size(); i++)
+	{
+		m_model[i].RenderBuffers(deviceContext);
+
+		shaderMgr->RenderShadowShader(deviceContext, m_model[i].GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+			lightViewMatrix, lightProjectionMatrix, 
+			m_model[i].textures.size() > 0 ? m_model[i].textures[0].GetTexture() : nullptr, depthMapTexture,
+			lightPosition, ambientColor, diffuseColor);
+	}
+}
+
+
+void ModelClass::SetPosition(float x, float y, float z)
+{
+	m_positionX = x;
+	m_positionY = y;
+	m_positionZ = z;
+	return;
+}
+
+
+void ModelClass::GetPosition(float& x, float& y, float& z)
+{
+	x = m_positionX;
+	y = m_positionY;
+	z = m_positionZ;
+	return;
 }
 
 

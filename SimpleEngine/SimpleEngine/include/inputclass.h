@@ -1,8 +1,7 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: inputclass.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _INPUTCLASS_H_
 #define _INPUTCLASS_H_
+
+#pragma once
 
 
 ///////////////////////////////
@@ -24,9 +23,6 @@
 #include <dinput.h>
 
 
-////////////////////////////////////////////////////////////////////////////////
-// Class name: InputClass
-////////////////////////////////////////////////////////////////////////////////
 class InputClass
 {
 public:
@@ -38,8 +34,19 @@ public:
 	void Shutdown();
 	bool Frame();
 
-	bool IsEscapePressed();
 	void GetMouseLocation(int&, int&);
+
+	bool IsEscapePressed();
+	bool IsLeftPressed();
+	bool IsRightPressed();
+	bool IsUpPressed();
+	bool IsDownPressed();
+	bool IsWPressed();
+	bool IsAPressed();
+	bool IsSPressed();
+	bool IsZPressed();
+	bool IsPgUpPressed();
+	bool IsPgDownPressed();
 
 private:
 	bool ReadKeyboard();

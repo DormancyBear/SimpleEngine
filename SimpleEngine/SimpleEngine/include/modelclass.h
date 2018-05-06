@@ -1,8 +1,7 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: modelclass.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _MODELCLASS_H_
 #define _MODELCLASS_H_
+
+#pragma once
 
 
 #include <d3d11.h>
@@ -55,9 +54,20 @@ public:
 	~ModelClass();
 
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, std::string);
-	void Render(ShaderManagerClass* shader, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
-		D3DXMATRIX projectionMatrix, D3DXVECTOR3 lightDirection, D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor,
-		D3DXVECTOR3 cameraPosition, D3DXVECTOR4 specularColor, float specularPower);
+
+	void RenderLightShader(ShaderManagerClass* shaderMgr, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+		D3DXMATRIX projectionMatrix, D3DXVECTOR3 lightDirection, D3DXVECTOR4 ambientColor,
+		D3DXVECTOR4 diffuseColor, D3DXVECTOR3 cameraPosition, D3DXVECTOR4 specularColor, float specularPower);
+
+	void RenderDepthShader(ShaderManagerClass* shaderMgr, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+		D3DXMATRIX projectionMatrix);
+
+	void RenderShadowShader(ShaderManagerClass* shaderMgr, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+		D3DXMATRIX projectionMatrix, D3DXMATRIX lightViewMatrix, D3DXMATRIX lightProjectionMatrix,
+		ID3D11ShaderResourceView* depthMapTexture, D3DXVECTOR3 lightPosition, D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor);
+
+	void SetPosition(float, float, float);
+	void GetPosition(float&, float&, float&);
 
 private:
 	void LoadModel(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string fileName);
@@ -65,6 +75,7 @@ private:
 private:
 	std::vector<MeshType> m_model;
 	std::string m_modelDirectory;	// 存放模型文件的文件夹( 默认所有纹理也都放在这个目录下 )
+	float m_positionX, m_positionY, m_positionZ;
 };
 
 #endif

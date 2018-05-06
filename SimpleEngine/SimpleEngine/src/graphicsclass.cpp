@@ -5,10 +5,13 @@ GraphicsClass::GraphicsClass()
 {
 	m_D3D = 0;
 	m_Camera = 0;
-	m_Model = 0;
+	m_HumanModel = 0;
+	m_GroundModel = 0;
 	m_ShaderManager = 0;
-	m_Light = 0;
+	m_DirectionalLight = 0;
+	m_PointLight = 0;
 	m_Text = 0;
+	m_RenderTexture = 0;
 }
 
 
@@ -50,7 +53,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-
 	// Initialize a base view matrix with the camera for 2D user interface rendering.
 	m_Camera->SetPosition(0.0f, 0.0f, -100.0f);
 	m_Camera->Render();
@@ -58,19 +60,36 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 
 	// Create the model object.
-	m_Model = new ModelClass;
-	if (!m_Model)
+	m_HumanModel = new ModelClass;
+	if (!m_HumanModel)
 	{
 		return false;
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), "./media/Models/Bayonetta2/model.xml");
+	result = m_HumanModel->Initialize(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), "./media/Models/Bayonetta2/model.xml");
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
+
+	m_HumanModel->SetPosition(-2.0f, 2.0f, 0.0f);
+
+
+	// Create the ground model object.
+	m_GroundModel = new ModelClass;
+	if (!m_GroundModel)
+	{
+		return false;
+	}
+	result = m_GroundModel->Initialize(m_D3D->GetDevice(), m_D3D->GetDeviceContext(), "./media/Models/Sponza/model.xml");
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the ground model object.", L"Error", MB_OK);
+		return false;
+	}
+	m_GroundModel->SetPosition(0.0f, 1.0f, 0.0f);
 
 
 	// Create the shader manager object.
@@ -90,18 +109,48 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 
 	// Create the light object.
-	m_Light = new LightClass;
-	if (!m_Light)
+	m_DirectionalLight = new DirectionalLightClass;
+	if (!m_DirectionalLight)
 	{
 		return false;
 	}
 
 	// Initialize the light object.
-	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
-	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
-	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetSpecularPower(32.0f);
+	m_DirectionalLight->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
+	m_DirectionalLight->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_DirectionalLight->SetDirection(0.0f, 0.0f, 1.0f);
+	m_DirectionalLight->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_DirectionalLight->SetSpecularPower(32.0f);
+
+
+	// Create the light object.
+	m_PointLight = new PointLightClass;
+	if (!m_PointLight)
+	{
+		return false;
+	}
+
+	// Initialize the light object.
+	m_PointLight->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
+	m_PointLight->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_PointLight->SetLookAt(0.0f, 0.0f, 0.0f);
+	m_PointLight->GenerateProjectionMatrix(SCREEN_DEPTH, SCREEN_NEAR);
+
+
+	// Create the render to texture object.
+	m_RenderTexture = new RenderTextureClass;
+	if (!m_RenderTexture)
+	{
+		return false;
+	}
+
+	// Initialize the render to texture object.
+	result = m_RenderTexture->Initialize(m_D3D->GetDevice(), SHADOWMAP_WIDTH, SHADOWMAP_HEIGHT, SCREEN_DEPTH, SCREEN_NEAR);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the render to texture object.", L"Error", MB_OK);
+		return false;
+	}
 
 
 	// Create the text object.
@@ -125,6 +174,28 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void GraphicsClass::Shutdown()
 {
+	// Release the render to texture object.
+	if (m_RenderTexture)
+	{
+		m_RenderTexture->Shutdown();
+		delete m_RenderTexture;
+		m_RenderTexture = 0;
+	}
+
+	// Release the light object.
+	if (m_PointLight)
+	{
+		delete m_PointLight;
+		m_PointLight = 0;
+	}
+
+	// Release the ground model object.
+	if (m_GroundModel)
+	{
+		delete m_GroundModel;
+		m_GroundModel = 0;
+	}
+
 	// Release the text object.
 	if(m_Text)
 	{
@@ -134,10 +205,10 @@ void GraphicsClass::Shutdown()
 	}
 
 	// Release the light object.
-	if (m_Light)
+	if (m_DirectionalLight)
 	{
-		delete m_Light;
-		m_Light = 0;
+		delete m_DirectionalLight;
+		m_DirectionalLight = 0;
 	}
 
 	// Release the light shader object.
@@ -149,10 +220,10 @@ void GraphicsClass::Shutdown()
 	}
 
 	// Release the model object.
-	if (m_Model)
+	if (m_HumanModel)
 	{
-		delete m_Model;
-		m_Model = 0;
+		delete m_HumanModel;
+		m_HumanModel = 0;
 	}
 
 	// Release the camera object.
@@ -174,7 +245,8 @@ void GraphicsClass::Shutdown()
 }
 
 
-bool GraphicsClass::Frame(int mouseX, int mouseY, int fps, int cpu, float frameTime)
+bool GraphicsClass::Frame(int mouseX, int mouseY, int fps, int cpu, float frameTime,
+	float posX, float posY, float posZ, float rotX, float rotY, float rotZ)
 {
 	// Set the location of the mouse.
 	bool result = m_Text->SetMousePosition(mouseX, mouseY, m_D3D->GetDeviceContext());
@@ -197,25 +269,23 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int fps, int cpu, float frameT
 		return false;
 	}
 
-	// Set the position of the camera.
-	m_Camera->SetPosition(0.0f, 120.0f, -400.0f);
+	m_Camera->SetPosition(posX, posY, posZ);
+	m_Camera->SetRotation(rotX, rotY, rotZ);
 
-	static float deltaTime = 0.0f;
-	static float rotation = 0.0f;
-	deltaTime += frameTime;
-	if (deltaTime >= 10.0f)
+	// Update the position of the light each frame.
+	static float lightPositionX = -5.0f;
+	lightPositionX += 0.05f;
+	if (lightPositionX > 5.0f)
 	{
-		deltaTime = 0.0f;
-
-		rotation += (float)D3DX_PI * 0.002f;
-		if (rotation > 360.0f)
-		{
-			rotation -= 360.0f;
-		}
+		lightPositionX = -5.0f;
 	}
+
+	// Update the position of the light.
+	m_PointLight->SetPosition(lightPositionX, 1000.0f, -50.0f);
+
 	
 	// Render the graphics scene.
-	result = Render(rotation);
+	result = Render();
 	if (!result)
 	{
 		return false;
@@ -225,10 +295,69 @@ bool GraphicsClass::Frame(int mouseX, int mouseY, int fps, int cpu, float frameT
 }
 
 
-bool GraphicsClass::Render(float rotation)
+bool GraphicsClass::RenderSceneToTexture()
+{
+	D3DXMATRIX worldMatrix, lightViewMatrix, lightProjectionMatrix, translateMatrix;
+	float posX, posY, posZ;
+	bool result;
+
+
+	// Set the render target to be the render to texture.
+	m_RenderTexture->SetRenderTarget(m_D3D->GetDeviceContext());
+
+	// Clear the render to texture.
+	m_RenderTexture->ClearRenderTarget(m_D3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Generate the light view matrix based on the light's position.
+	m_PointLight->GenerateViewMatrix();
+
+	// Get the view and orthographic matrices from the light object.
+	m_PointLight->GetViewMatrix(lightViewMatrix);
+	m_PointLight->GetProjectionMatrix(lightProjectionMatrix);
+
+
+	// Get the world matrix from the d3d object.
+	m_D3D->GetWorldMatrix(worldMatrix);
+
+	// Setup the translation matrix for the cube model.
+	m_HumanModel->GetPosition(posX, posY, posZ);
+	D3DXMatrixTranslation(&worldMatrix, posX, posY, posZ);
+
+	// Render the cube model with the depth shader.
+	m_HumanModel->RenderDepthShader(m_ShaderManager, m_D3D->GetDeviceContext(), worldMatrix, lightViewMatrix, lightProjectionMatrix);
+
+
+	// Reset the world matrix.
+	m_D3D->GetWorldMatrix(worldMatrix);
+
+	// Setup the translation matrix for the ground model.
+	m_GroundModel->GetPosition(posX, posY, posZ);
+	D3DXMatrixTranslation(&worldMatrix, posX, posY, posZ);
+
+	// Render the ground model with the depth shader.
+	m_GroundModel->RenderDepthShader(m_ShaderManager, m_D3D->GetDeviceContext(), worldMatrix, lightViewMatrix, lightProjectionMatrix);
+
+	// Reset the render target back to the original back buffer and not the render to texture anymore.
+	m_D3D->SetBackBufferRenderTarget();
+
+	// Reset the viewport back to the original.
+	m_D3D->ResetViewport();
+
+	return true;
+}
+
+
+bool GraphicsClass::Render()
 {
 	D3DXMATRIX worldMatrix, viewMatrix, projectionMatrix, orthoMatrix;
 
+
+	// First render the scene to a texture.
+	bool result = RenderSceneToTexture();
+	if (!result)
+	{
+		return false;
+	}
 
 	// Clear the buffers to begin the scene.
 	m_D3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
@@ -236,24 +365,51 @@ bool GraphicsClass::Render(float rotation)
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
 
-	// Get the view, projection, and world matrices from the camera and D3D objects.
+	// Generate the light view matrix based on the light's position.
+	m_PointLight->GenerateViewMatrix();
+
+	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_D3D->GetWorldMatrix(worldMatrix);
 	m_D3D->GetProjectionMatrix(projectionMatrix);
 	// 2D Rendering 中需要用 ortho matrix
 	m_D3D->GetOrthoMatrix(orthoMatrix);
 
+	// Get the light's view and projection matrices from the light object.
+	D3DXMATRIX lightViewMatrix, lightProjectionMatrix;
+	m_PointLight->GetViewMatrix(lightViewMatrix);
+	m_PointLight->GetProjectionMatrix(lightProjectionMatrix);
+
 	// first do all your 3D rendering
 	// then turn the Z buffer off and do your 2D rendering
 	// and then turn the Z buffer on again
 
-	// Rotate the world matrix by the rotation value so that the triangle will spin.
-	D3DXMatrixRotationY(&worldMatrix, rotation);
+	// Reset the world matrix.
+	m_D3D->GetWorldMatrix(worldMatrix);
 
-	// Render the model using the light shader.
-	m_Model->Render(m_ShaderManager, m_D3D->GetDeviceContext(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
-		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	// Setup the translation matrix for the ground model.
+	float posX, posY, posZ;
+	m_GroundModel->GetPosition(posX, posY, posZ);
+	D3DXMatrixTranslation(&worldMatrix, posX, posY, posZ);
+
+	// Render the ground model using the shadow shader.
+	//m_GroundModel->RenderShadowShader(m_ShaderManager, m_D3D->GetDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, lightViewMatrix,
+	//	lightProjectionMatrix, m_RenderTexture->GetShaderResourceView(), m_PointLight->GetPosition(),
+	//	m_PointLight->GetAmbientColor(), m_PointLight->GetDiffuseColor());
+	m_GroundModel->RenderLightShader(m_ShaderManager, m_D3D->GetDeviceContext(), worldMatrix, viewMatrix, projectionMatrix,
+		m_DirectionalLight->GetDirection(), m_DirectionalLight->GetAmbientColor(), m_DirectionalLight->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_DirectionalLight->GetSpecularColor(), m_DirectionalLight->GetSpecularPower());
+
+
+	m_D3D->GetWorldMatrix(worldMatrix);
+	m_HumanModel->GetPosition(posX, posY, posZ);
+	D3DXMatrixTranslation(&worldMatrix, posX, posY, posZ);
+	//m_HumanModel->RenderShadowShader(m_ShaderManager, m_D3D->GetDeviceContext(), worldMatrix, viewMatrix, projectionMatrix, lightViewMatrix,
+	//	lightProjectionMatrix, m_RenderTexture->GetShaderResourceView(), m_PointLight->GetPosition(),
+	//	m_PointLight->GetAmbientColor(), m_PointLight->GetDiffuseColor());
+	m_HumanModel->RenderLightShader(m_ShaderManager, m_D3D->GetDeviceContext(), worldMatrix, viewMatrix, projectionMatrix,
+		m_DirectionalLight->GetDirection(), m_DirectionalLight->GetAmbientColor(), m_DirectionalLight->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_DirectionalLight->GetSpecularColor(), m_DirectionalLight->GetSpecularPower());
 
 
 	// 保证了 2D image 能覆盖在 3D 场景之上( 深度测试关闭 )
@@ -265,7 +421,7 @@ bool GraphicsClass::Render(float rotation)
 
 	m_D3D->GetWorldMatrix(worldMatrix);
 	// Render the text strings.
-	bool result = m_Text->Render(m_D3D->GetDeviceContext(), worldMatrix, orthoMatrix);
+	result = m_Text->Render(m_D3D->GetDeviceContext(), worldMatrix, orthoMatrix);
 	if(!result)
 	{
 		return false;

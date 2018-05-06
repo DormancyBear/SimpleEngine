@@ -24,13 +24,7 @@
     <ClInclude Include="include\d3dclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\inputclass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\soundclass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\systemclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\fontclass.h">
@@ -43,15 +37,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\bitmapclass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\lightshaderclass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\modelclass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\lightclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\fpsclass.h">
@@ -72,6 +57,36 @@
     <ClInclude Include="include\FontShaderClass.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\ShadowShaderClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DirectionalLightClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PointLightClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RenderTextureClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DepthShaderClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ModelClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PositionClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SystemClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InputClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\LightShaderClass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cameraclass.cpp">
@@ -80,16 +95,10 @@
     <ClCompile Include="src\d3dclass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\inputclass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\soundclass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\systemclass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\fontclass.cpp">
@@ -102,15 +111,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\bitmapclass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lightshaderclass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\modelclass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\lightclass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\fpsclass.cpp">
@@ -131,6 +131,36 @@
     <ClCompile Include="src\FontShaderClass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\ShadowShaderClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectionalLightClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PointLightClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTextureClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DepthShaderClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ModelClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PositionClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SystemClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\LightShaderClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="media\RenderFX\font.ps">
@@ -146,5 +176,17 @@
       <Filter>Effect Files</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="media\RenderFX\shadow.ps">
+      <Filter>Effect Files</Filter>
+    </None>
+    <None Include="media\RenderFX\shadow.vs">
+      <Filter>Effect Files</Filter>
+    </None>
+    <None Include="media\RenderFX\depth.ps">
+      <Filter>Effect Files</Filter>
+    </None>
+    <None Include="media\RenderFX\depth.vs">
+      <Filter>Effect Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

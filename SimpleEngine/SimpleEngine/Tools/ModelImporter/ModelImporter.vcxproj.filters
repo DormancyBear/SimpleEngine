@@ -33,4 +33,7 @@
       <Filter>头文件\assimp</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

@@ -49,7 +49,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -112,14 +112,16 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>./Common/XmlHelper/include;$(DXSDK_DIR)\Include;.\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)\Lib\x64;../x64/Release;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -127,17 +129,22 @@
     <ClInclude Include="include\cameraclass.h" />
     <ClInclude Include="include\cpuclass.h" />
     <ClInclude Include="include\d3dclass.h" />
+    <ClInclude Include="include\DepthShaderClass.h" />
     <ClInclude Include="include\fontclass.h" />
     <ClInclude Include="include\FontShaderClass.h" />
     <ClInclude Include="include\fpsclass.h" />
     <ClInclude Include="include\GraphicsClass.h" />
-    <ClInclude Include="include\inputclass.h" />
-    <ClInclude Include="include\lightclass.h" />
-    <ClInclude Include="include\lightshaderclass.h" />
-    <ClInclude Include="include\modelclass.h" />
+    <ClInclude Include="include\DirectionalLightClass.h" />
+    <ClInclude Include="include\InputClass.h" />
+    <ClInclude Include="include\LightShaderClass.h" />
+    <ClInclude Include="include\ModelClass.h" />
+    <ClInclude Include="include\PointLightClass.h" />
+    <ClInclude Include="include\PositionClass.h" />
+    <ClInclude Include="include\RenderTextureClass.h" />
     <ClInclude Include="include\ShaderManagerClass.h" />
+    <ClInclude Include="include\ShadowShaderClass.h" />
     <ClInclude Include="include\soundclass.h" />
-    <ClInclude Include="include\systemclass.h" />
+    <ClInclude Include="include\SystemClass.h" />
     <ClInclude Include="include\textclass.h" />
     <ClInclude Include="include\textureclass.h" />
     <ClInclude Include="include\timerclass.h" />
@@ -147,27 +154,36 @@
     <ClCompile Include="src\cameraclass.cpp" />
     <ClCompile Include="src\cpuclass.cpp" />
     <ClCompile Include="src\d3dclass.cpp" />
+    <ClCompile Include="src\DepthShaderClass.cpp" />
     <ClCompile Include="src\fontclass.cpp" />
     <ClCompile Include="src\FontShaderClass.cpp" />
     <ClCompile Include="src\fpsclass.cpp" />
     <ClCompile Include="src\GraphicsClass.cpp" />
-    <ClCompile Include="src\inputclass.cpp" />
-    <ClCompile Include="src\lightclass.cpp" />
-    <ClCompile Include="src\lightshaderclass.cpp" />
+    <ClCompile Include="src\DirectionalLightClass.cpp" />
+    <ClCompile Include="src\InputClass.cpp" />
+    <ClCompile Include="src\LightShaderClass.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\modelclass.cpp" />
+    <ClCompile Include="src\ModelClass.cpp" />
+    <ClCompile Include="src\PointLightClass.cpp" />
+    <ClCompile Include="src\PositionClass.cpp" />
+    <ClCompile Include="src\RenderTextureClass.cpp" />
     <ClCompile Include="src\ShaderManagerClass.cpp" />
+    <ClCompile Include="src\ShadowShaderClass.cpp" />
     <ClCompile Include="src\soundclass.cpp" />
-    <ClCompile Include="src\systemclass.cpp" />
+    <ClCompile Include="src\SystemClass.cpp" />
     <ClCompile Include="src\textclass.cpp" />
     <ClCompile Include="src\textureclass.cpp" />
     <ClCompile Include="src\timerclass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="media\RenderFX\depth.ps" />
+    <None Include="media\RenderFX\depth.vs" />
     <None Include="media\RenderFX\font.ps" />
     <None Include="media\RenderFX\font.vs" />
     <None Include="media\RenderFX\light.ps" />
     <None Include="media\RenderFX\light.vs" />
+    <None Include="media\RenderFX\shadow.ps" />
+    <None Include="media\RenderFX\shadow.vs" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

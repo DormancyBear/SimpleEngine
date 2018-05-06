@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="assimp_native_init">
+  <PropertyGroup Label="Default initializers for properties">
+    <Linkage-assimp_native Condition="'$(Linkage-assimp_native)' == ''">dynamic</Linkage-assimp_native>
+    <CallingConvention-assimp_native Condition="'$(CallingConvention-assimp_native)' == ''">cdecl</CallingConvention-assimp_native>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>HAS_ASSIMP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)../..//build/native/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(MSBuildThisFileDirectory)../..//build/native/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="Win32 and v140 and Release" Condition="'$(Platform.ToLower())' == 'win32' And '$(PlatformToolset.ToLower())' == 'v140' And ( $(Configuration.ToLower().IndexOf('debug')) == -1 )">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib/Win32\v140\Release\assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="Win32 and v140 and Debug" Condition="'$(Platform.ToLower())' == 'win32' And '$(PlatformToolset.ToLower())' == 'v140' And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 )">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib/Win32\v140\Debug\assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="x64 and v140 and Release" Condition="'$(Platform.ToLower())' == 'x64' And '$(PlatformToolset.ToLower())' == 'v140' And ( $(Configuration.ToLower().IndexOf('debug')) == -1 )">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib/x64\v140\Release\assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="x64 and v140 and Debug" Condition="'$(Platform.ToLower())' == 'x64' And '$(PlatformToolset.ToLower())' == 'v140' And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 )">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib/x64\v140\Debug\assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="Win32 and v141 and Release" Condition="'$(Platform.ToLower())' == 'win32' And '$(PlatformToolset.ToLower())' == 'v141' And ( $(Configuration.ToLower().IndexOf('debug')) == -1 )">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib/Win32\v141\Release\assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="Win32 and v141 and Debug" Condition="'$(Platform.ToLower())' == 'win32' And '$(PlatformToolset.ToLower())' == 'v141' And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 )">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib/Win32\v141\Debug\assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="x64 and v141 and Release" Condition="'$(Platform.ToLower())' == 'x64' And '$(PlatformToolset.ToLower())' == 'v141' And ( $(Configuration.ToLower().IndexOf('debug')) == -1 )">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib/x64\v141\Release\assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Label="x64 and v141 and Debug" Condition="'$(Platform.ToLower())' == 'x64' And '$(PlatformToolset.ToLower())' == 'v141' And ( $(Configuration.ToLower().IndexOf('debug')) &gt; -1 )">
+    <Link>
+      <AdditionalDependencies>$(MSBuildThisFileDirectory)../..//build/native/lib/x64\v141\Debug\assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\default-propertiesui.xml" />
+  </ItemGroup>
+  <UsingTask TaskName="assimp_native_Contains" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" TaskFactory="CodeTaskFactory">
+    <ParameterGroup>
+      <Text Output="false" ParameterType="System.String" />
+      <Library Output="false" Required="true" ParameterType="System.String" />
+      <Value Output="false" Required="true" ParameterType="System.String" />
+      <Result Output="true" ParameterType="System.String" />
+    </ParameterGroup>
+    <Task>
+      <Code>Result = ((Text ?? "").Split(';').Contains(Library) ) ? Value : String.Empty;</Code>
+    </Task>
+  </UsingTask>
+  <Target Name="assimp_native_init">
+    <assimp_native_Contains Text="Linkage-dynamic" Library="assimp_native" Value="dynamic" Condition="'$(Linkage-assimp_native)'==''">
+      <Output TaskParameter="Result" PropertyName="Linkage-assimp_native" />
+    </assimp_native_Contains>
+    <assimp_native_Contains Text="Linkage-static" Library="assimp_native" Value="static" Condition="'$(Linkage-assimp_native)'==''">
+      <Output TaskParameter="Result" PropertyName="Linkage-assimp_native" />
+    </assimp_native_Contains>
+    <assimp_native_Contains Text="Linkage-ltcg" Library="assimp_native" Value="ltcg" Condition="'$(Linkage-assimp_native)'==''">
+      <Output TaskParameter="Result" PropertyName="Linkage-assimp_native" />
+    </assimp_native_Contains>
+    <assimp_native_Contains Text="Linkage-sxs" Library="assimp_native" Value="sxs" Condition="'$(Linkage-assimp_native)'==''">
+      <Output TaskParameter="Result" PropertyName="Linkage-assimp_native" />
+    </assimp_native_Contains>
+    <assimp_native_Contains Text="CallingConvention-cdecl" Library="assimp_native" Value="cdecl" Condition="'$(CallingConvention-assimp_native)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConvention-assimp_native" />
+    </assimp_native_Contains>
+    <assimp_native_Contains Text="CallingConvention-stdcall" Library="assimp_native" Value="stdcall" Condition="'$(CallingConvention-assimp_native)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConvention-assimp_native" />
+    </assimp_native_Contains>
+    <assimp_native_Contains Text="CallingConvention-fastcall" Library="assimp_native" Value="fastcall" Condition="'$(CallingConvention-assimp_native)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConvention-assimp_native" />
+    </assimp_native_Contains>
+    <assimp_native_Contains Text="CallingConvention-thiscall" Library="assimp_native" Value="thiscall" Condition="'$(CallingConvention-assimp_native)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConvention-assimp_native" />
+    </assimp_native_Contains>
+    <assimp_native_Contains Text="CallingConvention-clrcall" Library="assimp_native" Value="clrcall" Condition="'$(CallingConvention-assimp_native)'==''">
+      <Output TaskParameter="Result" PropertyName="CallingConvention-assimp_native" />
+    </assimp_native_Contains>
+  </Target>
+</Project>
