@@ -21,7 +21,7 @@
 // MY CLASS INCLUDES //
 ///////////////////////
 #include "inputclass.h"
-#include "graphicsclass.h"
+#include "GraphicsClass.h"
 #include "soundclass.h"
 #include "fpsclass.h"
 #include "cpuclass.h"

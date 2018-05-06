@@ -1,10 +1,9 @@
+#pragma once
+
 #ifndef _SHADERCLASS_H_
 #define _SHADERCLASS_H_
 
 
-//////////////
-// INCLUDES //
-//////////////
 #include <d3d11.h>
 #include <d3dx10math.h>
 #include <d3dx11async.h>
@@ -12,7 +11,7 @@
 using namespace std;
 
 
-class ShaderClass
+class FontShaderClass
 {
 private:
 	struct ConstantBufferType
@@ -28,9 +27,9 @@ private:
 	};
 
 public:
-	ShaderClass();
-	ShaderClass(const ShaderClass&);
-	~ShaderClass();
+	FontShaderClass();
+	FontShaderClass(const FontShaderClass&);
+	~FontShaderClass();
 
 	bool Initialize(ID3D11Device*, HWND);
 	void Shutdown();

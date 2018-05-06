@@ -7,7 +7,7 @@
 TextClass::TextClass()
 {
 	m_Font = 0;
-	m_Shader = 0;
+	m_FontShader = 0;
 
 	m_sentence1 = 0;
 	m_sentence2 = 0;
@@ -53,14 +53,14 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	}
 
 	// Create the font shader object.
-	m_Shader = new ShaderClass;
-	if(!m_Shader)
+	m_FontShader = new FontShaderClass;
+	if(!m_FontShader)
 	{
 		return false;
 	}
 
 	// Initialize the font shader object.
-	result = m_Shader->Initialize(device, hwnd);
+	result = m_FontShader->Initialize(device, hwnd);
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the font shader object.", L"Error", MB_OK);
@@ -108,11 +108,11 @@ void TextClass::Shutdown()
 	ReleaseSentence(&m_sentence2);
 
 	// Release the font shader object.
-	if(m_Shader)
+	if(m_FontShader)
 	{
-		m_Shader->Shutdown();
-		delete m_Shader;
-		m_Shader = 0;
+		m_FontShader->Shutdown();
+		delete m_FontShader;
+		m_FontShader = 0;
 	}
 
 	// Release the font object.
@@ -376,7 +376,7 @@ bool TextClass::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType*
 	// allow us to draw text to the same location on the screen each frame regardless of where the current view may be
 	// orthoMatrix: instead of the regular projection matrix
 	// since this should be drawn using 2D coordinates.
-	result = m_Shader->Render(deviceContext, sentence->indexCount, worldMatrix, m_baseViewMatrix, orthoMatrix, m_Font->GetTexture(), 
+	result = m_FontShader->Render(deviceContext, sentence->indexCount, worldMatrix, m_baseViewMatrix, orthoMatrix, m_Font->GetTexture(), 
 								  pixelColor);
 	if(!result)
 	{

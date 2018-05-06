@@ -40,7 +40,7 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 }
 
 
-void ModelClass::Render(LightShaderClass* shader, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+void ModelClass::Render(ShaderManagerClass* shader, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
 	D3DXMATRIX projectionMatrix, D3DXVECTOR3 lightDirection, D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor,
 	 D3DXVECTOR3 cameraPosition, D3DXVECTOR4 specularColor, float specularPower)
 {
@@ -48,11 +48,9 @@ void ModelClass::Render(LightShaderClass* shader, ID3D11DeviceContext* deviceCon
 	{
 		m_model[i].RenderBuffers(deviceContext);
 
-		shader->SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix,
+		shader->RenderLightShader(deviceContext, m_model[i].GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 			m_model[i].textures.size() > 0 ? m_model[i].textures[0].GetTexture() : nullptr, lightDirection, ambientColor, diffuseColor,
 			cameraPosition, specularColor, specularPower);
-
-		shader->Render(deviceContext, m_model[i].GetIndexCount());
 	}
 }
 

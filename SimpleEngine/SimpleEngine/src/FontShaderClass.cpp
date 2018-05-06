@@ -1,7 +1,7 @@
-#include "shaderclass.h"
+#include "FontShaderClass.h"
 
 
-ShaderClass::ShaderClass()
+FontShaderClass::FontShaderClass()
 {
 	m_vertexShader = 0;
 	m_pixelShader = 0;
@@ -12,17 +12,17 @@ ShaderClass::ShaderClass()
 }
 
 
-ShaderClass::ShaderClass(const ShaderClass& other)
+FontShaderClass::FontShaderClass(const FontShaderClass& other)
 {
 }
 
 
-ShaderClass::~ShaderClass()
+FontShaderClass::~FontShaderClass()
 {
 }
 
 
-bool ShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
+bool FontShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
 	bool result;
 
@@ -38,7 +38,7 @@ bool ShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 }
 
 
-void ShaderClass::Shutdown()
+void FontShaderClass::Shutdown()
 {
 	// Shutdown the vertex and pixel shaders as well as the related objects.
 	ShutdownShader();
@@ -47,7 +47,7 @@ void ShaderClass::Shutdown()
 }
 
 
-bool ShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+bool FontShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
 							 D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 pixelColor)
 {
 	bool result;
@@ -67,7 +67,7 @@ bool ShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, D3D
 }
 
 
-bool ShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
+bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -231,7 +231,7 @@ bool ShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 }
 
 
-void ShaderClass::ShutdownShader()
+void FontShaderClass::ShutdownShader()
 {
 	// Release the pixel constant buffer.
 	if(m_pixelBuffer)
@@ -279,7 +279,7 @@ void ShaderClass::ShutdownShader()
 }
 
 
-void ShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
+void FontShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
 {
 	char* compileErrors;
 	unsigned long bufferSize, i;
@@ -315,7 +315,7 @@ void ShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, 
 }
 
 
-bool ShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+bool FontShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
 										  D3DXMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, D3DXVECTOR4 pixelColor)
 {
 	HRESULT result;
@@ -377,7 +377,7 @@ bool ShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, D3DXMA
 }
 
 
-void ShaderClass::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void FontShaderClass::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
 	// Set the vertex input layout.
 	deviceContext->IASetInputLayout(m_layout);

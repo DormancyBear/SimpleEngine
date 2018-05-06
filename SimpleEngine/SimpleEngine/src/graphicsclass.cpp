@@ -1,7 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: graphicsclass.cpp
-////////////////////////////////////////////////////////////////////////////////
-#include "graphicsclass.h"
+#include "GraphicsClass.h"
 
 
 GraphicsClass::GraphicsClass()
@@ -9,7 +6,7 @@ GraphicsClass::GraphicsClass()
 	m_D3D = 0;
 	m_Camera = 0;
 	m_Model = 0;
-	m_LightShader = 0;
+	m_ShaderManager = 0;
 	m_Light = 0;
 	m_Text = 0;
 }
@@ -46,6 +43,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+
 	// Create the camera object.
 	m_Camera = new CameraClass;
 	if(!m_Camera)
@@ -57,6 +55,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->SetPosition(0.0f, 0.0f, -100.0f);
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(baseViewMatrix);
+
 
 	// Create the model object.
 	m_Model = new ModelClass;
@@ -73,20 +72,22 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create the light shader object.
-	m_LightShader = new LightShaderClass;
-	if (!m_LightShader)
+
+	// Create the shader manager object.
+	m_ShaderManager = new ShaderManagerClass;
+	if (!m_ShaderManager)
 	{
 		return false;
 	}
 
-	// Initialize the light shader object.
-	result = m_LightShader->Initialize(m_D3D->GetDevice(), hwnd);
+	// Initialize the shader manager object.
+	result = m_ShaderManager->Initialize(m_D3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the shader manager object.", L"Error", MB_OK);
 		return false;
 	}
+
 
 	// Create the light object.
 	m_Light = new LightClass;
@@ -101,6 +102,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetSpecularPower(32.0f);
+
 
 	// Create the text object.
 	m_Text = new TextClass;
@@ -139,11 +141,11 @@ void GraphicsClass::Shutdown()
 	}
 
 	// Release the light shader object.
-	if (m_LightShader)
+	if (m_ShaderManager)
 	{
-		m_LightShader->Shutdown();
-		delete m_LightShader;
-		m_LightShader = 0;
+		m_ShaderManager->Shutdown();
+		delete m_ShaderManager;
+		m_ShaderManager = 0;
 	}
 
 	// Release the model object.
@@ -249,7 +251,7 @@ bool GraphicsClass::Render(float rotation)
 	D3DXMatrixRotationY(&worldMatrix, rotation);
 
 	// Render the model using the light shader.
-	m_Model->Render(m_LightShader, m_D3D->GetDeviceContext(), worldMatrix, viewMatrix, projectionMatrix,
+	m_Model->Render(m_ShaderManager, m_D3D->GetDeviceContext(), worldMatrix, viewMatrix, projectionMatrix,
 		m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 

@@ -9,7 +9,7 @@
 #include <d3dx10math.h>
 #include <vector>
 #include "textureclass.h"
-#include "lightshaderclass.h"
+#include "ShaderManagerClass.h"
 
 
 // 一个 mesh( 网格 )是单次渲染的基本单位
@@ -55,7 +55,7 @@ public:
 	~ModelClass();
 
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, std::string);
-	void Render(LightShaderClass* shader, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
+	void Render(ShaderManagerClass* shader, ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatrix, D3DXMATRIX viewMatrix,
 		D3DXMATRIX projectionMatrix, D3DXVECTOR3 lightDirection, D3DXVECTOR4 ambientColor, D3DXVECTOR4 diffuseColor,
 		D3DXVECTOR3 cameraPosition, D3DXVECTOR4 specularColor, float specularPower);
 
