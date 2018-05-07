@@ -12,7 +12,7 @@
 #include "PointLightClass.h"
 #include "RenderTextureClass.h"
 #include "bitmapclass.h"
-#include "textclass.h"
+#include "TextClass.h"
 
 
 const bool FULL_SCREEN = false;	// 全屏模式下无法调试 Orz

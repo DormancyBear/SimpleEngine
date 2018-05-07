@@ -1,10 +1,11 @@
-#pragma once
-
 #ifndef _TEXTCLASS_H_
 #define _TEXTCLASS_H_
 
+#pragma once
 
-#include "fontclass.h"
+
+#include <memory>
+#include "FontClass.h"
 #include "FontShaderClass.h"
 
 
@@ -18,6 +19,23 @@ private:
 		ID3D11Buffer *vertexBuffer, *indexBuffer;
 		int vertexCount, indexCount, maxLength;
 		float red, green, blue;
+
+		~SentenceType()
+		{
+			// Release the sentence vertex buffer.
+			if (vertexBuffer)
+			{
+				vertexBuffer->Release();
+				vertexBuffer = nullptr;
+			}
+
+			// Release the sentence index buffer.
+			if (indexBuffer)
+			{
+				indexBuffer->Release();
+				indexBuffer = nullptr;
+			}
+		}
 	};
 
 	struct VertexType
@@ -40,18 +58,21 @@ public:
 	bool SetCpu(int, ID3D11DeviceContext*);
 
 private:
-	bool InitializeSentence(SentenceType**, int, ID3D11Device*);
-	bool UpdateSentence(SentenceType*, char*, int, int, float, float, float, ID3D11DeviceContext*);
-	void ReleaseSentence(SentenceType**);
-	bool RenderSentence(ID3D11DeviceContext*, SentenceType*, D3DXMATRIX, D3DXMATRIX);
+	bool InitializeSentence(std::shared_ptr<SentenceType>& sentence, int maxLength, ID3D11Device* device);
+	bool UpdateSentence(std::shared_ptr<SentenceType> sentence, std::string text, int positionX, int positionY, float red, float green, float blue,
+		ID3D11DeviceContext* deviceContext);
+	bool RenderSentence(ID3D11DeviceContext* deviceContext, std::shared_ptr<SentenceType> sentence, D3DXMATRIX worldMatrix,
+		D3DXMATRIX orthoMatrix);
 
 private:
 	FontClass* m_Font;
 	FontShaderClass* m_FontShader;
 	int m_screenWidth, m_screenHeight;
 	D3DXMATRIX m_baseViewMatrix;
-	SentenceType* m_sentence1;
-	SentenceType* m_sentence2;
+	std::shared_ptr<SentenceType> m_sentence1;
+	std::shared_ptr<SentenceType> m_sentence2;
+	std::shared_ptr<SentenceType> m_sentence3;
+	std::shared_ptr<SentenceType> m_operationSentence;
 };
 
 #endif

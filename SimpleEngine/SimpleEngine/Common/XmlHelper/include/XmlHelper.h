@@ -1,7 +1,8 @@
-#pragma once
-
 #ifndef XML_HELPER_H_
 #define XML_HELPER_H_
+
+#pragma once
+
 
 #include <string>
 #include <vector>
@@ -9,9 +10,9 @@
 #include "rapidxml.hpp"
 
 
-// ÎªÁË·ÀÖ¹Ö®ºóÉı¼¶ rapidxml Ê±, Ò»µ© rapidxml ½Ó¿Ú·¢Éú±ä»¯, ÎÒÕâ±ßÏîÄ¿´úÂëĞèÒª´óÃæ»ıĞŞ¸ÄµÄÇé¿ö
-// ¶Ô rapidxml ÔÙ×öÒ»¸ö·â×°
-// Íâ²¿ÏîÄ¿ĞèÒªÓÃµ½ rapidxml Ê±, Ö»Ğè°üº¬ÕâÒ»¸öÍ·ÎÄ¼ş
+// ä¸ºäº†é˜²æ­¢ä¹‹åå‡çº§ rapidxml æ—¶, ä¸€æ—¦ rapidxml æ¥å£å‘ç”Ÿå˜åŒ–, æˆ‘è¿™è¾¹é¡¹ç›®ä»£ç éœ€è¦å¤§é¢ç§¯ä¿®æ”¹çš„æƒ…å†µ
+// å¯¹ rapidxml å†åšä¸€ä¸ªå°è£…
+// å¤–éƒ¨é¡¹ç›®éœ€è¦ç”¨åˆ° rapidxml æ—¶, åªéœ€åŒ…å«è¿™ä¸€ä¸ªå¤´æ–‡ä»¶
 namespace XmlHelper
 {
 	enum XMLNodeType
@@ -43,8 +44,8 @@ namespace XmlHelper
 	class XMLNode
 	{
 	public:
-		XMLNode(rapidxml::xml_node<char>* node);	// ¶ÁÈ¡
-		XMLNode(rapidxml::xml_document<char>& doc, XMLNodeType type, char* name);	// Ğ´Èë
+		XMLNode(rapidxml::xml_node<char>* node);	// è¯»å–
+		XMLNode(rapidxml::xml_document<char>& doc, XMLNodeType type, char* name);	// å†™å…¥
 
 		void AppendNode(std::shared_ptr<XMLNode> const & node);
 		void AppendAttribute(std::shared_ptr<XMLAttribute> const & attr);
@@ -67,20 +68,26 @@ namespace XmlHelper
 	public:
 		XMLDocument();
 
-		// ½âÎöÒ»¸ö xml ÎÄ¼ş
+		// è§£æä¸€ä¸ª xml æ–‡ä»¶
 		std::shared_ptr<XMLNode> Parse(std::string fileName);
 
-		// ´æÎªÒ»¸ö xml ÎÄ¼ş
+		// å­˜ä¸ºä¸€ä¸ª xml æ–‡ä»¶
 		void Save(const char *filename);
 
 		std::shared_ptr<XMLNode> AllocateNode(XMLNodeType type, std::string name);
 		std::shared_ptr<XMLAttribute> AllocateAttribute(std::string name, std::string value);
 
-		// Ò»¸ö xml ÎÄ¼şÖ»ÓĞÒ»¸ö¸ù½Úµã
+		// ä¸€ä¸ª xml æ–‡ä»¶åªæœ‰ä¸€ä¸ªæ ¹èŠ‚ç‚¹
 		void AssignRootNode(std::shared_ptr<XMLNode> const & root_node);
 
 	private:
+		// The string must persist for the lifetime of the document.
 		std::vector<char> xml_content;
+
+		// xml_document ä¸ä»…ä»£è¡¨äº† DOM æ ‘çš„æ ¹èŠ‚ç‚¹, å®ƒè¿˜åŒæ—¶ public ç»§æ‰¿è‡ª memory_pool
+		// å³æ‰€æœ‰ node, attribute éƒ½ç”± xml_document å¯¹è±¡ allocate å¾—åˆ°( å¹¶è¿›è¡Œç®¡ç† )
+		// xml_document è¶…å‡ºä½œç”¨åŸŸæ—¶, ä¼šæŠŠæ‰€æœ‰å·²ç”³è¯·çš„å†…å­˜å…¨éƒ¨é‡Šæ”¾æ‰
+		// æ‰€ä»¥è¿™é‡Œè¦æŠŠ xml_document ä¿å­˜ä¸‹æ¥
 		std::shared_ptr<rapidxml::xml_document<char>> _doc;
 		std::shared_ptr<XMLNode> _root;
 	};

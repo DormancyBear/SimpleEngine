@@ -7,7 +7,6 @@ using namespace XmlHelper;
 
 XMLDocument::XMLDocument()
 {
-	// ËùÓĞ node, attribute ¶¼Í¨¹ı xml_ducument ¶ÔÏó allocate µÃµ½( ±ØĞë±£Ö¤ _doc µÄÉúÃüÖÜÆÚ )
 	_doc = std::make_shared<rapidxml::xml_document<char>>();
 }
 
@@ -17,18 +16,18 @@ std::shared_ptr<XMLNode> XMLDocument::Parse(std::string fileName)
 	std::ifstream inputfile;
 	inputfile.open(fileName);
 
-	// »ñÈ¡ÎÄ¼ş³¤¶È
+	// è·å–æ–‡ä»¶é•¿åº¦
 	inputfile.seekg(0, std::ios_base::end);
 	int fileLength = inputfile.tellg();
 
-	// ¶ÁÈëÊı¾İ
+	// è¯»å…¥æ•°æ®
 	inputfile.seekg(0, std::ios_base::beg);
-	xml_content.resize(fileLength + 1, 0);	// rapidxml ÒªÇó½âÎöµÄÊÇÒ»¸ö zero-terminated string
+	xml_content.resize(fileLength + 1, 0);	// rapidxml è¦æ±‚è§£æçš„æ˜¯ä¸€ä¸ª zero-terminated string
 	inputfile.read(&xml_content[0], fileLength);
 
 	inputfile.close();
 
-	// xml ½âÎö
+	// xml è§£æ
 	_doc->parse<0>(&xml_content[0]);
 	_root = std::make_shared<XMLNode>(_doc->first_node());
 
@@ -41,7 +40,7 @@ void XMLDocument::Save(const char *filename)
 	std::ofstream outputfile;
 	outputfile.open(filename);
 
-	// Éú³É xml string µ½Êä³öÁ÷
+	// ç”Ÿæˆ xml string åˆ°è¾“å‡ºæµ
 	outputfile << *_doc;
 
 	outputfile.close();
@@ -50,8 +49,8 @@ void XMLDocument::Save(const char *filename)
 
 std::shared_ptr<XMLNode> XMLDocument::AllocateNode(XMLNodeType type, std::string name)
 {
-	// rapidxml ÄÚ²¿Í¨¹ıÖ¸ÕëÀ´·ÃÎÊÎÒÃÇÌá¹©µÄ×Ö·û´®
-	// ËùÒÔ±ØĞëÈ·±£×Ö·û´®µÄÉúÃüÖÜÆÚ, ²»ÒªÓÃÁÙÊ±±äÁ¿( ±äÁ¿Ò»µ©Ïú»ÙÊı¾İ¾ÍÃ»ÁË )
+	// rapidxml å†…éƒ¨é€šè¿‡æŒ‡é’ˆæ¥è®¿é—®æˆ‘ä»¬æä¾›çš„å­—ç¬¦ä¸²
+	// æ‰€ä»¥å¿…é¡»ç¡®ä¿å­—ç¬¦ä¸²çš„ç”Ÿå‘½å‘¨æœŸ, ä¸è¦ç”¨ä¸´æ—¶å˜é‡( å˜é‡ä¸€æ—¦é”€æ¯æ•°æ®å°±æ²¡äº† )
 	return std::make_shared<XMLNode>(*_doc, type, _doc->allocate_string(name.c_str()));
 }
 
@@ -64,7 +63,7 @@ std::shared_ptr<XMLAttribute> XMLDocument::AllocateAttribute(std::string name, s
 
 void XMLDocument::AssignRootNode(std::shared_ptr<XMLNode> const & root_node)
 {
-	// Í¨ÓÃ XML ÉùÃ÷, ¶Á xml Ê± first_node() ²»°ÑÕâ¸öÉùÃ÷ÊÓÎª½Úµã
+	// é€šç”¨ XML å£°æ˜, è¯» xml æ—¶ first_node() ä¸æŠŠè¿™ä¸ªå£°æ˜è§†ä¸ºèŠ‚ç‚¹
 	rapidxml::xml_node<char>* declnode = _doc->allocate_node(rapidxml::node_declaration);
 	declnode->append_attribute(_doc->allocate_attribute("version", "1.0"));
 	declnode->append_attribute(_doc->allocate_attribute("encoding", "utf-8"));

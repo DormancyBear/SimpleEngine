@@ -1,7 +1,5 @@
-///////////////////////////////////////////////////////////////////////////////
-// Filename: fontclass.cpp
-///////////////////////////////////////////////////////////////////////////////
-#include "fontclass.h"
+#include <fstream>
+#include "FontClass.h"
 
 
 FontClass::FontClass()
@@ -58,7 +56,7 @@ void FontClass::Shutdown()
 
 bool FontClass::LoadFontData(char* filename)
 {
-	ifstream fin;
+	std::ifstream fin;
 	int i;
 	char temp;
 
@@ -159,26 +157,23 @@ ID3D11ShaderResourceView* FontClass::GetTexture()
 }
 
 
-// Ò»¾ä text sentence ¶ÔÓ¦Ò»¸ö vertex buffer
-void FontClass::BuildVertexArray(void* vertices, char* sentence, float drawX, float drawY)
+// ä¸€å¥ text sentence å¯¹åº”ä¸€ä¸ª vertex buffer
+void FontClass::BuildVertexArray(void* vertices, std::string sentence, float drawX, float drawY)
 {
 	VertexType* vertexPtr;
-	int numLetters, index, i, letter;
+	int index, letter;
 
 
 	// Coerce the input vertices into a VertexType structure.
 	vertexPtr = (VertexType*)vertices;
 
-	// Get the number of letters in the sentence.
-	numLetters = (int)strlen(sentence);
-
 	// Initialize the index to the vertex array.
 	index = 0;
 
 	// how to render a single character?
-	// ÎªÃ¿¸ö character ´´½¨Ò»¸ö square( Á½¸ö triangles ×é³ÉÒ»¸ö square )
-	// È»ºó render the single character from the font texture onto that square
-	for(i=0; i<numLetters; i++)
+	// ä¸ºæ¯ä¸ª character åˆ›å»ºä¸€ä¸ª square( ä¸¤ä¸ª triangles ç»„æˆä¸€ä¸ª square )
+	// ç„¶å render the single character from the font texture onto that square
+	for(size_t i = 0; i < sentence.length(); i++)
 	{
 		letter = ((int)sentence[i]) - 32;
 

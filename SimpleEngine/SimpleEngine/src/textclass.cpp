@@ -1,16 +1,11 @@
-///////////////////////////////////////////////////////////////////////////////
-// Filename: textclass.cpp
-///////////////////////////////////////////////////////////////////////////////
-#include "textclass.h"
+#include <string>
+#include "TextClass.h"
 
 
 TextClass::TextClass()
 {
 	m_Font = 0;
 	m_FontShader = 0;
-
-	m_sentence1 = 0;
-	m_sentence2 = 0;
 }
 
 
@@ -68,29 +63,50 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 	}
 
 	// Initialize the first sentence.
-	result = InitializeSentence(&m_sentence1, 16, device);
+	result = InitializeSentence(m_sentence1, 16, device);
 	if(!result)
 	{
 		return false;
 	}
 
 	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence1, "Hello", 100, 100, 1.0f, 1.0f, 1.0f, deviceContext);
+	result = UpdateSentence(m_sentence1, "Hello", 20, 20, 1.0f, 1.0f, 1.0f, deviceContext);
 	if(!result)
 	{
 		return false;
 	}
 
 	// Initialize the first sentence.
-	result = InitializeSentence(&m_sentence2, 16, device);
+	result = InitializeSentence(m_sentence2, 16, device);
+	if(!result)
+	{
+		return false;
+	}
+	// Now update the sentence vertex buffer with the new string information.
+	result = UpdateSentence(m_sentence2, "Goodbye", 20, 40, 1.0f, 1.0f, 0.0f, deviceContext);
 	if(!result)
 	{
 		return false;
 	}
 
-	// Now update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, "Goodbye", 100, 200, 1.0f, 1.0f, 0.0f, deviceContext);
-	if(!result)
+	result = InitializeSentence(m_sentence3, 32, device);
+	if (!result)
+	{
+		return false;
+	}
+	result = UpdateSentence(m_sentence3, "Mouse Coordinate", 20, 60, 0.0f, 1.0f, 0.0f, deviceContext);
+	if (!result)
+	{
+		return false;
+	}
+
+	result = InitializeSentence(m_operationSentence, 42, device);
+	if (!result)
+	{
+		return false;
+	}
+	result = UpdateSentence(m_operationSentence, "Operation: W A S D UP DOWN LEFT RIGHT R F", 20, 80, 1.0f, 1.0f, 0.0f, deviceContext);
+	if (!result)
 	{
 		return false;
 	}
@@ -101,12 +117,6 @@ bool TextClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 
 void TextClass::Shutdown()
 {
-	// Release the first sentence.
-	ReleaseSentence(&m_sentence1);
-
-	// Release the second sentence.
-	ReleaseSentence(&m_sentence2);
-
 	// Release the font shader object.
 	if(m_FontShader)
 	{
@@ -146,11 +156,23 @@ bool TextClass::Render(ID3D11DeviceContext* deviceContext, D3DXMATRIX worldMatri
 		return false;
 	}
 
+	result = RenderSentence(deviceContext, m_sentence3, worldMatrix, orthoMatrix);
+	if (!result)
+	{
+		return false;
+	}
+
+	result = RenderSentence(deviceContext, m_operationSentence, worldMatrix, orthoMatrix);
+	if (!result)
+	{
+		return false;
+	}
+
 	return true;
 }
 
 
-bool TextClass::InitializeSentence(SentenceType** sentence, int maxLength, ID3D11Device* device)
+bool TextClass::InitializeSentence(std::shared_ptr<SentenceType>& sentence, int maxLength, ID3D11Device* device)
 {
 	VertexType* vertices;
 	unsigned long* indices;
@@ -161,51 +183,51 @@ bool TextClass::InitializeSentence(SentenceType** sentence, int maxLength, ID3D1
 
 
 	// Create a new sentence object.
-	*sentence = new SentenceType;
-	if(!*sentence)
+	sentence = std::make_shared<SentenceType>();
+	if(!sentence)
 	{
 		return false;
 	}
 
 	// Initialize the sentence buffers to null.
-	(*sentence)->vertexBuffer = 0;
-	(*sentence)->indexBuffer = 0;
+	sentence->vertexBuffer = 0;
+	sentence->indexBuffer = 0;
 
 	// Set the maximum length of the sentence.
-	(*sentence)->maxLength = maxLength;
+	sentence->maxLength = maxLength;
 
 	// Set the number of vertices in the vertex array.
-	(*sentence)->vertexCount = 6 * maxLength;
+	sentence->vertexCount = 6 * maxLength;
 
 	// Set the number of indexes in the index array.
-	(*sentence)->indexCount = (*sentence)->vertexCount;
+	sentence->indexCount = sentence->vertexCount;
 
 	// Create the vertex array.
-	vertices = new VertexType[(*sentence)->vertexCount];
+	vertices = new VertexType[sentence->vertexCount];
 	if(!vertices)
 	{
 		return false;
 	}
 
 	// Create the index array.
-	indices = new unsigned long[(*sentence)->indexCount];
+	indices = new unsigned long[sentence->indexCount];
 	if(!indices)
 	{
 		return false;
 	}
 
 	// Initialize vertex array to zeros at first.
-	memset(vertices, 0, (sizeof(VertexType) * (*sentence)->vertexCount));
+	memset(vertices, 0, (sizeof(VertexType) * sentence->vertexCount));
 
 	// Initialize the index array.
-	for(i=0; i<(*sentence)->indexCount; i++)
+	for(i=0; i < sentence->indexCount; i++)
 	{
 		indices[i] = i;
 	}
 
 	// Set up the description of the dynamic vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    vertexBufferDesc.ByteWidth = sizeof(VertexType) * (*sentence)->vertexCount;
+    vertexBufferDesc.ByteWidth = sizeof(VertexType) * sentence->vertexCount;
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     vertexBufferDesc.MiscFlags = 0;
@@ -217,7 +239,7 @@ bool TextClass::InitializeSentence(SentenceType** sentence, int maxLength, ID3D1
 	vertexData.SysMemSlicePitch = 0;
 
 	// Create the vertex buffer.
-    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &(*sentence)->vertexBuffer);
+    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &sentence->vertexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -225,7 +247,7 @@ bool TextClass::InitializeSentence(SentenceType** sentence, int maxLength, ID3D1
 
 	// Set up the description of the static index buffer.
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * (*sentence)->indexCount;
+    indexBufferDesc.ByteWidth = sizeof(unsigned long) * sentence->indexCount;
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
@@ -237,7 +259,7 @@ bool TextClass::InitializeSentence(SentenceType** sentence, int maxLength, ID3D1
 	indexData.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &(*sentence)->indexBuffer);
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &sentence->indexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -255,10 +277,9 @@ bool TextClass::InitializeSentence(SentenceType** sentence, int maxLength, ID3D1
 }
 
 
-bool TextClass::UpdateSentence(SentenceType* sentence, char* text, int positionX, int positionY, float red, float green, float blue,
+bool TextClass::UpdateSentence(std::shared_ptr<SentenceType> sentence, std::string text, int positionX, int positionY, float red, float green, float blue,
 							   ID3D11DeviceContext* deviceContext)
 {
-	int numLetters;
 	VertexType* vertices;
 	float drawX, drawY;
 	HRESULT result;
@@ -271,11 +292,8 @@ bool TextClass::UpdateSentence(SentenceType* sentence, char* text, int positionX
 	sentence->green = green;
 	sentence->blue = blue;
 
-	// Get the number of letters in the sentence.
-	numLetters = (int)strlen(text);
-
 	// Check for possible buffer overflow.
-	if(numLetters > sentence->maxLength)
+	if(text.length() > sentence->maxLength)
 	{
 		return false;
 	}
@@ -321,34 +339,7 @@ bool TextClass::UpdateSentence(SentenceType* sentence, char* text, int positionX
 }
 
 
-void TextClass::ReleaseSentence(SentenceType** sentence)
-{
-	if(*sentence)
-	{
-		// Release the sentence vertex buffer.
-		if((*sentence)->vertexBuffer)
-		{
-			(*sentence)->vertexBuffer->Release();
-			(*sentence)->vertexBuffer = 0;
-		}
-
-		// Release the sentence index buffer.
-		if((*sentence)->indexBuffer)
-		{
-			(*sentence)->indexBuffer->Release();
-			(*sentence)->indexBuffer = 0;
-		}
-
-		// Release the sentence.
-		delete *sentence;
-		*sentence = 0;
-	}
-
-	return;
-}
-
-
-bool TextClass::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType* sentence, D3DXMATRIX worldMatrix, 
+bool TextClass::RenderSentence(ID3D11DeviceContext* deviceContext, std::shared_ptr<SentenceType> sentence, D3DXMATRIX worldMatrix,
 							   D3DXMATRIX orthoMatrix)
 {
 	unsigned int stride, offset;
@@ -389,34 +380,16 @@ bool TextClass::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType*
 
 bool TextClass::SetMousePosition(int mouseX, int mouseY, ID3D11DeviceContext* deviceContext)
 {
-	char tempString[16];
-	char mouseString[16];
-	bool result;
+	std::string mouseString;
 
-
-	// Convert the mouseX integer to string format.
-	_itoa_s(mouseX, tempString, 10);
-
-	// Setup the mouseX string.
-	strcpy_s(mouseString, "Mouse X: ");
-	strcat_s(mouseString, tempString);
+	// Setup the mouse string.
+	mouseString = "Mouse X: ";
+	mouseString += std::to_string(mouseX);
+	mouseString += "  Mouse Y: ";
+	mouseString += std::to_string(mouseY);
 
 	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence1, mouseString, 20, 20, 1.0f, 1.0f, 1.0f, deviceContext);
-	if(!result)
-	{
-		return false;
-	}
-
-	// Convert the mouseY integer to string format.
-	_itoa_s(mouseY, tempString, 10);
-
-	// Setup the mouseY string.
-	strcpy_s(mouseString, "Mouse Y: ");
-	strcat_s(mouseString, tempString);
-
-	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, mouseString, 20, 40, 1.0f, 1.0f, 1.0f, deviceContext);
+	bool result = UpdateSentence(m_sentence3, mouseString, 20, 60, 1.0f, 1.0f, 1.0f, deviceContext);
 	if(!result)
 	{
 		return false;
@@ -498,7 +471,7 @@ bool TextClass::SetCpu(int cpu, ID3D11DeviceContext* deviceContext)
 	strcat_s(cpuString, "%");
 
 	// Update the sentence vertex buffer with the new string information.
-	result = UpdateSentence(m_sentence2, cpuString, 20, 60, 0.0f, 1.0f, 0.0f, deviceContext);
+	result = UpdateSentence(m_sentence2, cpuString, 20, 40, 0.0f, 1.0f, 0.0f, deviceContext);
 	if (!result)
 	{
 		return false;
