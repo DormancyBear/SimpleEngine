@@ -1,4 +1,6 @@
 #include <fstream>
+#include <filesystem>
+
 #include "XmlHelper.h"
 #include "rapidxml_print.hpp"
 
@@ -13,18 +15,14 @@ XMLDocument::XMLDocument()
 
 std::shared_ptr<XMLNode> XMLDocument::Parse(std::string fileName)
 {
-	std::ifstream inputfile;
-	inputfile.open(fileName);
-
 	// 获取文件长度
-	inputfile.seekg(0, std::ios_base::end);
-	int fileLength = inputfile.tellg();
+	int fileLength = std::filesystem::file_size(fileName);
 
 	// 读入数据
-	inputfile.seekg(0, std::ios_base::beg);
+	std::ifstream inputfile(fileName, std::ios::in | std::ios::binary | std::ios::ate);
+	inputfile.seekg(0, std::ios::beg);
 	xml_content.resize(fileLength + 1, 0);	// rapidxml 要求解析的是一个 zero-terminated string
-	inputfile.read(&xml_content[0], fileLength);
-
+	inputfile.read(xml_content.data(), fileLength);
 	inputfile.close();
 
 	// xml 解析

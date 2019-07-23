@@ -51,7 +51,6 @@ bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceC
 		return false;
 	}
 
-
 	hr = CreateShaderResourceView(device,
 		image.GetImages(), image.GetImageCount(),
 		image.GetMetadata(), &m_texture);
