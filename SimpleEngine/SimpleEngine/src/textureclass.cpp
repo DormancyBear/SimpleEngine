@@ -1,10 +1,7 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: textureclass.cpp
-////////////////////////////////////////////////////////////////////////////////
 #include <memory>
 #include <DirectXTex.h>
 #include "textureclass.h"
-
+#include <Graphics/DirectXPlatformManager.h>
 
 TextureClass::TextureClass()
 {
@@ -22,7 +19,7 @@ TextureClass::~TextureClass()
 }
 
 
-bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, WCHAR* filename)
+bool TextureClass::Initialize(WCHAR const * filename)
 {
 	wchar_t ext[_MAX_EXT];
 	_wsplitpath_s(filename, nullptr, 0, nullptr, 0, nullptr, 0, ext, _MAX_EXT);
@@ -51,7 +48,7 @@ bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceC
 		return false;
 	}
 
-	hr = CreateShaderResourceView(device,
+	hr = CreateShaderResourceView(DirectXPlatformManager::Instance().GetDevice(),
 		image.GetImages(), image.GetImageCount(),
 		image.GetMetadata(), &m_texture);
 	if (FAILED(hr))

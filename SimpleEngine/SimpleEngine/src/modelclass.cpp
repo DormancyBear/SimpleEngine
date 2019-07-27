@@ -206,7 +206,7 @@ void ModelClass::LoadModel(ID3D11Device* device, ID3D11DeviceContext* deviceCont
 				mbstowcs_s(&convertedChars, &wtexture_path[0], wpath_size, texture_path.c_str(), _TRUNCATE);
 
 				// 每个 mesh 可能有多张纹理
-				m_model[i].textures[k].Initialize(device, deviceContext, &wtexture_path[0]);
+				m_model[i].textures[k].Initialize(&wtexture_path[0]);
 			}
 		}
 
@@ -305,17 +305,9 @@ void MeshType::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	// Set vertex buffer stride and offset.
 	stride = sizeof(VertexType);
 	offset = 0;
-
-	// Set the vertex buffer to active in the input assembler so it can be rendered.
 	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
-
-	// Set the index buffer to active in the input assembler so it can be rendered.
 	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	return;
 }
 
 

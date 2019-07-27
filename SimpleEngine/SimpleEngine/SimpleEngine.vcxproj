@@ -116,7 +116,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./Common/XmlHelper/include;$(DXSDK_DIR)\Include;.\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Common/XmlHelper/include;$(DXSDK_DIR)\Include;./include;./Modules;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -125,10 +125,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\bitmapclass.h" />
-    <ClInclude Include="include\cameraclass.h" />
     <ClInclude Include="include\cpuclass.h" />
-    <ClInclude Include="include\d3dclass.h" />
     <ClInclude Include="include\DepthShaderClass.h" />
     <ClInclude Include="include\FontClass.h" />
     <ClInclude Include="include\FontShaderClass.h" />
@@ -144,16 +141,32 @@
     <ClInclude Include="include\ShaderManagerClass.h" />
     <ClInclude Include="include\ShadowShaderClass.h" />
     <ClInclude Include="include\soundclass.h" />
-    <ClInclude Include="include\SystemClass.h" />
     <ClInclude Include="include\TextClass.h" />
     <ClInclude Include="include\textureclass.h" />
     <ClInclude Include="include\timerclass.h" />
+    <ClInclude Include="Modules\Graphics\Camera.h" />
+    <ClInclude Include="Modules\Graphics\DirectXPlatformManager.h" />
+    <ClInclude Include="Modules\Graphics\textureshaderclass.h" />
+    <ClInclude Include="Modules\GUI\BaseLayout.h" />
+    <ClInclude Include="Modules\GUI\ExampleLayout.h" />
+    <ClInclude Include="Modules\GUI\Skin.h" />
+    <ClInclude Include="Modules\GUI\UICommon.h" />
+    <ClInclude Include="Modules\GUI\GUIManager.h" />
+    <ClInclude Include="Modules\GUI\Image.h" />
+    <ClInclude Include="Modules\GUI\Widget.h" />
+    <ClInclude Include="Modules\NativePlatform\NativePlatform.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\bitmapclass.cpp" />
-    <ClCompile Include="src\cameraclass.cpp" />
+    <ClCompile Include="Modules\Graphics\Camera.cpp" />
+    <ClCompile Include="Modules\Graphics\DirectXPlatformManager.cpp" />
+    <ClCompile Include="Modules\Graphics\textureshaderclass.cpp" />
+    <ClCompile Include="Modules\GUI\BaseLayout.cpp" />
+    <ClCompile Include="Modules\GUI\ExampleLayout.cpp" />
+    <ClCompile Include="Modules\GUI\GUIManager.cpp" />
+    <ClCompile Include="Modules\GUI\Image.cpp" />
+    <ClCompile Include="Modules\GUI\Widget.cpp" />
+    <ClCompile Include="Modules\NativePlatform\NativePlatform.cpp" />
     <ClCompile Include="src\cpuclass.cpp" />
-    <ClCompile Include="src\d3dclass.cpp" />
     <ClCompile Include="src\DepthShaderClass.cpp" />
     <ClCompile Include="src\FontClass.cpp" />
     <ClCompile Include="src\FontShaderClass.cpp" />
@@ -170,7 +183,6 @@
     <ClCompile Include="src\ShaderManagerClass.cpp" />
     <ClCompile Include="src\ShadowShaderClass.cpp" />
     <ClCompile Include="src\soundclass.cpp" />
-    <ClCompile Include="src\SystemClass.cpp" />
     <ClCompile Include="src\TextClass.cpp" />
     <ClCompile Include="src\textureclass.cpp" />
     <ClCompile Include="src\timerclass.cpp" />
@@ -184,6 +196,8 @@
     <None Include="media\RenderFX\light.vs" />
     <None Include="media\RenderFX\shadow.ps" />
     <None Include="media\RenderFX\shadow.vs" />
+    <None Include="media\RenderFX\texture.ps" />
+    <None Include="media\RenderFX\texture.vs" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -350,14 +350,8 @@ bool TextClass::RenderSentence(ID3D11DeviceContext* deviceContext, std::shared_p
 	// Set vertex buffer stride and offset.
     stride = sizeof(VertexType); 
 	offset = 0;
-
-	// Set the vertex buffer to active in the input assembler so it can be rendered.
 	deviceContext->IASetVertexBuffers(0, 1, &sentence->vertexBuffer, &stride, &offset);
-
-    // Set the index buffer to active in the input assembler so it can be rendered.
 	deviceContext->IASetIndexBuffer(sentence->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-    // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Create a pixel color vector with the input sentence color.

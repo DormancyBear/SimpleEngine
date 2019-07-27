@@ -1,33 +1,13 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: main.cpp
-////////////////////////////////////////////////////////////////////////////////
-#include "SystemClass.h"
+#include <NativePlatform/NativePlatform.h>
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-	SystemClass* System;
-	bool result;
-	
-	
-	// Create the system object.
-	System = new SystemClass;
-	if(!System)
-	{
-		return 0;
-	}
-
-	// Initialize and run the system object.
-	result = System->Initialize();
+	bool result = NativePlatform::Instance().Initialize();
 	if(result)
 	{
-		System->Run();
+		NativePlatform::Instance().Run();
 	}
-
-	// Shutdown and release the system object.
-	System->Shutdown();
-	delete System;
-	System = 0;
 
 	return 0;
 }

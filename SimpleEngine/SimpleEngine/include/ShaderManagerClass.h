@@ -4,7 +4,7 @@
 #define _SHADERMANAGERCLASS_H_
 
 
-#include "d3dclass.h"
+#include <Graphics/DirectXPlatformManager.h>
 #include "LightShaderClass.h"
 #include "DepthShaderClass.h"
 #include "ShadowShaderClass.h"

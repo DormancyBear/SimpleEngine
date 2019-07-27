@@ -35,7 +35,7 @@ bool SoundClass::Initialize(HWND hwnd)
 	}
 
 	// Load a wave audio file onto a secondary buffer.
-	result = LoadWaveFile("./media/Sounds/the_night_sky.wav", &m_secondaryBuffer1);
+	result = LoadWaveFile("./media/Sounds/bgm.wav", &m_secondaryBuffer1);
 	if(!result)
 	{
 		return false;

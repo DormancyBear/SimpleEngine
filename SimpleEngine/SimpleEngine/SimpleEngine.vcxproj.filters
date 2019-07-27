@@ -16,21 +16,21 @@
     <Filter Include="Effect Files">
       <UniqueIdentifier>{c9924c2d-5065-409d-a863-0f7033e4cbc1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{912d1527-738b-4635-963e-fbd9acaa3577}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{58dcd3b8-9580-40e7-ad91-5cf583e2ebb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NativePlatform">
+      <UniqueIdentifier>{0d4cbf6e-445a-4bfe-8a8e-ea6b4f1078ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\cameraclass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\d3dclass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\soundclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\textureclass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\bitmapclass.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\fpsclass.h">
@@ -72,9 +72,6 @@
     <ClInclude Include="include\PositionClass.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\SystemClass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\InputClass.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -87,14 +84,41 @@
     <ClInclude Include="include\FontClass.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Modules\GUI\GUIManager.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\GUI\Widget.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\Graphics\DirectXPlatformManager.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\GUI\Image.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\GUI\UICommon.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\GUI\Skin.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\Graphics\textureshaderclass.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\NativePlatform\NativePlatform.h">
+      <Filter>NativePlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\GUI\BaseLayout.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\GUI\ExampleLayout.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\Graphics\Camera.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\cameraclass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\d3dclass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -102,9 +126,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\textureclass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\bitmapclass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\fpsclass.cpp">
@@ -149,9 +170,6 @@
     <ClCompile Include="src\InputClass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\SystemClass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\LightShaderClass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -160,6 +178,33 @@
     </ClCompile>
     <ClCompile Include="src\FontClass.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\GUI\GUIManager.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\GUI\Widget.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Graphics\DirectXPlatformManager.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\GUI\Image.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Graphics\textureshaderclass.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\NativePlatform\NativePlatform.cpp">
+      <Filter>NativePlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\GUI\BaseLayout.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\GUI\ExampleLayout.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\Graphics\Camera.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +231,12 @@
       <Filter>Effect Files</Filter>
     </None>
     <None Include="media\RenderFX\depth.vs">
+      <Filter>Effect Files</Filter>
+    </None>
+    <None Include="media\RenderFX\texture.ps">
+      <Filter>Effect Files</Filter>
+    </None>
+    <None Include="media\RenderFX\texture.vs">
       <Filter>Effect Files</Filter>
     </None>
   </ItemGroup>
