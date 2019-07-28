@@ -149,11 +149,12 @@
     <ClInclude Include="Modules\Graphics\textureshaderclass.h" />
     <ClInclude Include="Modules\GUI\BaseLayout.h" />
     <ClInclude Include="Modules\GUI\ExampleLayout.h" />
+    <ClInclude Include="Modules\GUI\HorizontalLayoutGroup.h" />
     <ClInclude Include="Modules\GUI\Skin.h" />
     <ClInclude Include="Modules\GUI\UICommon.h" />
     <ClInclude Include="Modules\GUI\GUIManager.h" />
     <ClInclude Include="Modules\GUI\Image.h" />
-    <ClInclude Include="Modules\GUI\Widget.h" />
+    <ClInclude Include="Modules\GUI\LayoutNode.h" />
     <ClInclude Include="Modules\NativePlatform\NativePlatform.h" />
   </ItemGroup>
   <ItemGroup>
@@ -163,8 +164,9 @@
     <ClCompile Include="Modules\GUI\BaseLayout.cpp" />
     <ClCompile Include="Modules\GUI\ExampleLayout.cpp" />
     <ClCompile Include="Modules\GUI\GUIManager.cpp" />
+    <ClCompile Include="Modules\GUI\HorizontalLayoutGroup.cpp" />
     <ClCompile Include="Modules\GUI\Image.cpp" />
-    <ClCompile Include="Modules\GUI\Widget.cpp" />
+    <ClCompile Include="Modules\GUI\LayoutNode.cpp" />
     <ClCompile Include="Modules\NativePlatform\NativePlatform.cpp" />
     <ClCompile Include="src\cpuclass.cpp" />
     <ClCompile Include="src\DepthShaderClass.cpp" />

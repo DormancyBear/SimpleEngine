@@ -87,9 +87,6 @@
     <ClInclude Include="Modules\GUI\GUIManager.h">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Modules\GUI\Widget.h">
-      <Filter>GUI</Filter>
-    </ClInclude>
     <ClInclude Include="Modules\Graphics\DirectXPlatformManager.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -116,6 +113,12 @@
     </ClInclude>
     <ClInclude Include="Modules\Graphics\Camera.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\GUI\LayoutNode.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\GUI\HorizontalLayoutGroup.h">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -182,9 +185,6 @@
     <ClCompile Include="Modules\GUI\GUIManager.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
-    <ClCompile Include="Modules\GUI\Widget.cpp">
-      <Filter>GUI</Filter>
-    </ClCompile>
     <ClCompile Include="Modules\Graphics\DirectXPlatformManager.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -205,6 +205,12 @@
     </ClCompile>
     <ClCompile Include="Modules\Graphics\Camera.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\GUI\LayoutNode.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Modules\GUI\HorizontalLayoutGroup.cpp">
+      <Filter>GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

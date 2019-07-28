@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "Widget.h"
-#include "GUIManager.h"
+#include <GUI/LayoutNode.h>
 #include <GUI/Skin.h>
 #include <GUI/BaseLayout.h>
 #include <NativePlatform/NativePlatform.h>
+#include <GUI/GUIManager.h>
 
 namespace SimpleEngine
 {
@@ -80,6 +80,12 @@ namespace SimpleEngine
 			{
 				node->OnRender(absolute_position);
 			}
+		}
+
+		void LayoutNode::SetRelativePosition(Point<int> left_top)
+		{
+			relative_coord_.left = left_top.left;
+			relative_coord_.top = left_top.top;
 		}
 
 		void LayoutNode::SetCoord(Rect<int> anchor_offset, Point<float> anchor_min, Point<float> anchor_max)

@@ -15,8 +15,6 @@ namespace SimpleEngine
 		class BaseLayout;
 		class ISkin;
 
-		// 布局对象, 负责管理控件的位置坐标和尺寸大小
-		// 建立一个 UI 坐标系: 以屏幕左上角为原点, X轴向右为正方向, Y轴向下为正方向
 		// 布局对象的相对坐标: 以 LayoutNode 左上角为基准点进行比较
 		class LayoutNode
 		{
@@ -34,6 +32,8 @@ namespace SimpleEngine
 			{
 				return relative_coord_.GetSize();
 			}
+
+			void SetRelativePosition(Point<int> left_top);
 
 			// 这些 public API 都是按照界面设计时的标准分辨率来设置控件的尺寸, 至于分辨率适配后的实际坐标, 对于 API 调用者是透明的
 			void SetCoord(Rect<int> anchor_offset,

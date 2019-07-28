@@ -9,6 +9,8 @@ namespace SimpleEngine
 	{
 		void GUIManager::Initialize()
 		{
+			D3DXMatrixIdentity(&world_matrix_);
+
 			camera_ = std::make_shared<Camera>();
 			camera_->SetPosition(0.0f, 0.0f, -100.0f);
 			camera_->Render();
@@ -29,6 +31,11 @@ namespace SimpleEngine
 			return static_cast<float>(NativePlatform::Instance().GetScreenHeight()) / standard_window_size_.height;
 		}
 
+		void GUIManager::GetWorldMatrix(D3DXMATRIX & world_matrix)
+		{
+			world_matrix = world_matrix_;
+		}
+
 		void GUIManager::OnWindowResized()
 		{
 			for (auto layout : layout_list_)
@@ -39,8 +46,6 @@ namespace SimpleEngine
 
 		void GUIManager::OnRender()
 		{
-			// 关闭 Z buffer = 关闭深度测试 = 所有写入指定像素位置的数据都能无脑覆盖掉原本的数据 = 保证了 2D UI 能覆盖在 3D 场景之上
-			// TODO: Make sure to use the painter's algorithm and draw from the back to the front to ensure you get your expected rendering output.
 			DirectXPlatformManager::Instance().TurnZBufferOff();
 
 			for (auto layout : layout_list_)
@@ -48,7 +53,6 @@ namespace SimpleEngine
 				layout->OnRender();
 			}
 
-			// 所有 2D UI 渲染完毕, 重新开启 Z buffer, 防止影响后续渲染
 			DirectXPlatformManager::Instance().TurnZBufferOn();
 		}
 

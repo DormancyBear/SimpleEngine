@@ -38,7 +38,7 @@ namespace SimpleEngine
 		private:
 			bool InitializeBuffers();
 			void ShutdownBuffers();
-			bool UpdateBuffers(int, int);
+			bool RebuildBuffers(Coord<int> coord);
 			void RenderBuffers();
 
 			bool LoadTexture(WCHAR const *);
@@ -52,8 +52,7 @@ namespace SimpleEngine
 			TextureClass* m_Texture{ nullptr };
 			TextureShaderClass* m_TextureShader{ nullptr };
 
-			int m_bitmapWidth, m_bitmapHeight;
-			int m_previousPosX{ -1 }, m_previousPosY{ -1 };
+			Rect<int> image_bounds_;
 		};
 	}
 }

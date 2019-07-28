@@ -351,14 +351,11 @@ void DirectXPlatformManager::Shutdown()
 
 void DirectXPlatformManager::BeginScene(float red, float green, float blue, float alpha)
 {
-	// Setup the color to clear the buffer to.
 	float color[4];
 	color[0] = red;
 	color[1] = green;
 	color[2] = blue;
 	color[3] = alpha;
-
-	// Clear the back buffer.
 	device_context_->ClearRenderTargetView(render_target_view_, color);
     
 	// Clear the depth buffer.
@@ -477,16 +474,13 @@ void DirectXPlatformManager::SetBackBufferRenderTarget()
 
 void DirectXPlatformManager::ResetViewport()
 {
-	// Setup the viewport for rendering.
 	D3D11_VIEWPORT view_port;
-	view_port.Width = (float)NativePlatform::Instance().GetScreenWidth();
-	view_port.Height = (float)NativePlatform::Instance().GetScreenHeight();
-	view_port.MinDepth = 0.0f;
-	view_port.MaxDepth = 1.0f;
 	view_port.TopLeftX = 0.0f;
 	view_port.TopLeftY = 0.0f;
-
-	// Create the viewport.
+	view_port.Width = static_cast<float>(NativePlatform::Instance().GetScreenWidth());
+	view_port.Height = static_cast<float>(NativePlatform::Instance().GetScreenHeight());
+	view_port.MinDepth = 0.0f;
+	view_port.MaxDepth = 1.0f;
 	device_context_->RSSetViewports(1, &view_port);
 }
 
@@ -514,7 +508,7 @@ void DirectXPlatformManager::ResetBackBufferAndDepthStencilBuffer()
 	device_->CreateRenderTargetView(backBufferPtr, NULL, &render_target_view_);
 	// Release pointer to the back buffer as we no longer need it.
 	backBufferPtr->Release();
-	backBufferPtr = 0;
+	backBufferPtr = nullptr;
 
 	// Initialize the description of the depth buffer.
 	D3D11_TEXTURE2D_DESC depthBufferDesc;

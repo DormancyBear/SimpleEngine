@@ -28,7 +28,6 @@ void Camera::SetPosition(float x, float y, float z)
 	m_positionX = x;
 	m_positionY = y;
 	m_positionZ = z;
-	return;
 }
 
 
@@ -37,7 +36,6 @@ void Camera::SetRotation(float x, float y, float z)
 	m_rotationX = x;
 	m_rotationY = y;
 	m_rotationZ = z;
-	return;
 }
 
 
@@ -77,19 +75,14 @@ void Camera::Render()
 	float pitch = m_rotationX * 0.0174532925f;
 	float yaw = m_rotationY * 0.0174532925f;
 	float roll  = m_rotationZ * 0.0174532925f;
-
 	// Create the rotation matrix from the yaw, pitch, and roll values.
 	D3DXMATRIX rotationMatrix;
 	D3DXMatrixRotationYawPitchRoll(&rotationMatrix, yaw, pitch, roll);
-
 	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
 	D3DXVec3TransformCoord(&lookAt, &lookAt, &rotationMatrix);
 	D3DXVec3TransformCoord(&up, &up, &rotationMatrix);
 
-	// 世界坐标系中的被观察点坐标( 指示 camera 看向的方向 )
 	lookAt = position + lookAt;
-
-	// Finally create the view matrix from the three updated vectors.
 	D3DXMatrixLookAtLH(&m_viewMatrix, &position, &lookAt, &up);
 }
 

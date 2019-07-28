@@ -188,15 +188,10 @@ void RenderTextureClass::SetRenderTarget(ID3D11DeviceContext* deviceContext)
 void RenderTextureClass::ClearRenderTarget(ID3D11DeviceContext* deviceContext, float red, float green, float blue, float alpha)
 {
 	float color[4];
-
-
-	// Setup the color to clear the buffer to.
 	color[0] = red;
 	color[1] = green;
 	color[2] = blue;
 	color[3] = alpha;
-
-	// Clear the back buffer.
 	deviceContext->ClearRenderTargetView(m_renderTargetView, color);
     
 	// Clear the depth buffer.

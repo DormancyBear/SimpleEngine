@@ -1,8 +1,8 @@
 #include <GUI/Image.h>
 #include <Graphics/DirectXPlatformManager.h>
-#include <GUI/GUIManager.h>
 #include <Graphics/Camera.h>
 #include <NativePlatform/NativePlatform.h>
+#include <GUI/GUIManager.h>
 
 namespace SimpleEngine
 {
@@ -40,11 +40,8 @@ namespace SimpleEngine
 
 		void Image::DoRender(Coord<int> absolute_coord)
 		{
-			m_bitmapWidth = absolute_coord.width;
-			m_bitmapHeight = absolute_coord.height;
-
 			// Re-build the dynamic vertex buffer for rendering to possibly a different location on the screen.
-			UpdateBuffers(absolute_coord.left, absolute_coord.top);
+			RebuildBuffers(absolute_coord);
 			// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 			RenderBuffers();
 		}
@@ -176,24 +173,21 @@ namespace SimpleEngine
 			return;
 		}
 
-
-		bool Image::UpdateBuffers(int positionX, int positionY)
+		bool Image::RebuildBuffers(Coord<int> coord)
 		{
-			// 如果这个 image 相对于上一帧的位置大小没有改变的话, 就不用浪费时间去修改 dynamic vertex buffer, 直接绑定到渲染流水线就可以用了 (每帧都需要重新绑定)
-			if ((positionX == m_previousPosX) && (positionY == m_previousPosY))
+			// 在 DirectX 里, 屏幕坐标系是以屏幕中心为原点 (0,0), X轴向右为正方向, Y轴向上为正方向
+			Rect<int> new_bounds;
+			new_bounds.left = coord.left - (float)NativePlatform::Instance().GetScreenWidth() / 2;
+			new_bounds.right = new_bounds.left + (float)coord.width;
+			new_bounds.top = (float)NativePlatform::Instance().GetScreenHeight() / 2 - coord.top;
+			new_bounds.bottom = new_bounds.top - (float)coord.height;
+
+			// 如果这个 image 相对于上一帧的尺寸大小没有变化的话, 就不用浪费时间去修改 dynamic vertex buffer, 直接绑定到渲染流水线就可以用了 (每帧都需要重新绑定)
+			if (image_bounds_ == new_bounds)
 			{
 				return true;
 			}
-
-			// If it has changed then update the position it is being rendered to.
-			m_previousPosX = positionX;
-			m_previousPosY = positionY;
-
-			// 在 DirectX 里, 屏幕坐标系是以屏幕中心为原点 (0,0), X轴向右为正方向, Y轴向上为正方向
-			float left = positionX - (float)NativePlatform::Instance().GetScreenWidth() / 2;
-			float right = left + (float)m_bitmapWidth;
-			float top = (float)NativePlatform::Instance().GetScreenHeight() / 2 - positionY;
-			float bottom = top - (float)m_bitmapHeight;
+			image_bounds_ = new_bounds;
 
 			// Create the vertex array.
 			VertexType* vertices = new VertexType[m_vertexCount];
@@ -202,21 +196,18 @@ namespace SimpleEngine
 				return false;
 			}
 
-			// 因为关闭了 Z Buffer, 所以 Z 坐标其实没什么用
-			// First triangle.
-			vertices[0].position = D3DXVECTOR3(left, top, 0.0f);  // Top left.
+			vertices[0].position = D3DXVECTOR3(image_bounds_.left, image_bounds_.top, 0.0f);  // Top left.
 			vertices[0].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[1].position = D3DXVECTOR3(right, bottom, 0.0f);  // Bottom right.
+			vertices[1].position = D3DXVECTOR3(image_bounds_.right, image_bounds_.bottom, 0.0f);  // Bottom right.
 			vertices[1].texture = D3DXVECTOR2(1.0f, 1.0f);
-			vertices[2].position = D3DXVECTOR3(left, bottom, 0.0f);  // Bottom left.
+			vertices[2].position = D3DXVECTOR3(image_bounds_.left, image_bounds_.bottom, 0.0f);  // Bottom left.
 			vertices[2].texture = D3DXVECTOR2(0.0f, 1.0f);
 
-			// Second triangle.
-			vertices[3].position = D3DXVECTOR3(left, top, 0.0f);  // Top left.
+			vertices[3].position = D3DXVECTOR3(image_bounds_.left, image_bounds_.top, 0.0f);  // Top left.
 			vertices[3].texture = D3DXVECTOR2(0.0f, 0.0f);
-			vertices[4].position = D3DXVECTOR3(right, top, 0.0f);  // Top right.
+			vertices[4].position = D3DXVECTOR3(image_bounds_.right, image_bounds_.top, 0.0f);  // Top right.
 			vertices[4].texture = D3DXVECTOR2(1.0f, 0.0f);
-			vertices[5].position = D3DXVECTOR3(right, bottom, 0.0f);  // Bottom right.
+			vertices[5].position = D3DXVECTOR3(image_bounds_.right, image_bounds_.bottom, 0.0f);  // Bottom right.
 			vertices[5].texture = D3DXVECTOR2(1.0f, 1.0f);
 
 			// Lock the vertex buffer so it can be written to.
@@ -256,7 +247,7 @@ namespace SimpleEngine
 			DirectXPlatformManager::Instance().GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 			D3DXMATRIX worldMatrix, viewMatrix, orthoMatrix;
-			DirectXPlatformManager::Instance().GetWorldMatrix(worldMatrix);
+			GUIManager::Instance().GetWorldMatrix(worldMatrix);
 			GUIManager::Instance().GetCamera()->GetViewMatrix(viewMatrix);
 			// 2D Rendering 中需要用 ortho matrix
 			DirectXPlatformManager::Instance().GetOrthoMatrix(orthoMatrix);

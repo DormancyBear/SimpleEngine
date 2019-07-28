@@ -21,7 +21,7 @@ namespace SimpleEngine
 				return Point(left + other.left, top + other.top);
 			}
 
-			Point& operator+=(Point other)
+			Point& operator+=(Point const & other)
 			{
 				left += other.left;
 				top += other.top;
@@ -48,6 +48,11 @@ namespace SimpleEngine
 
 			Coord(T left, T top, T width, T height) : left(left), top(top), width(width), height(height) {}
 
+			bool operator==(Coord const & other) const
+			{
+				return ((left == other.left) && (top == other.top) && (width == other.width) && (height == other.height));
+			}
+
 			Size<T> GetSize()
 			{
 				return Size<T>(width, height);
@@ -63,9 +68,9 @@ namespace SimpleEngine
 
 			Rect(T left, T top, T right, T bottom) : left(left), top(top), right(right), bottom(bottom) {}
 
-			Point<T> LeftTop() const
+			bool operator==(Rect const & other) const
 			{
-				return Point<T>(left, top);
+				return ((left == other.left) && (top == other.top) && (right == other.right) && (bottom == other.bottom));
 			}
 		};
 	}

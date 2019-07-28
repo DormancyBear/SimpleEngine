@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include <d3d11.h>
+#include <d3dx10math.h>
+
 #include <vector>
 #include <memory>
 
@@ -34,6 +37,8 @@ namespace SimpleEngine
 			// 实际窗口的高 / 标准分辨率的高
 			float GetHeightResizeScale();
 
+			void GetWorldMatrix(D3DXMATRIX & world_matrix);
+
 			void SetStandardWindowSize(unsigned int width, unsigned int height)
 			{
 				standard_window_size_.width = width;
@@ -55,6 +60,7 @@ namespace SimpleEngine
 			// 界面设计时所参考的的标准窗口大小
 			Size<int> standard_window_size_;
 			std::vector<std::shared_ptr<BaseLayout>> layout_list_;
+			D3DXMATRIX world_matrix_;
 		};
 	}
 }

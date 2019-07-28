@@ -1,6 +1,6 @@
 #include <GUI/BaseLayout.h>
+#include <GUI/LayoutNode.h>
 #include <GUI/GUIManager.h>
-#include <GUI/Widget.h>
 
 namespace SimpleEngine
 {
