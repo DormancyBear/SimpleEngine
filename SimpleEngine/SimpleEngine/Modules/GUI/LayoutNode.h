@@ -15,7 +15,8 @@ namespace SimpleEngine
 		class BaseLayout;
 		class ISkin;
 
-		// 布局对象的相对坐标: 以 LayoutNode 左上角为基准点进行比较
+		// UI 坐标系: 以屏幕左下角为原点, x 轴向右为正方向, y 轴向上为正方向
+		// 布局对象的相对坐标: 以 LayoutNode 左下角为基准点进行比较
 		class LayoutNode
 		{
 		public:
@@ -33,7 +34,7 @@ namespace SimpleEngine
 				return relative_coord_.GetSize();
 			}
 
-			void SetRelativePosition(Point<int> left_top);
+			void SetRelativePosition(Point<int> position);
 
 			// 这些 public API 都是按照界面设计时的标准分辨率来设置控件的尺寸, 至于分辨率适配后的实际坐标, 对于 API 调用者是透明的
 			void SetCoord(Rect<int> anchor_offset,
@@ -44,13 +45,13 @@ namespace SimpleEngine
 			void SetSkin(std::shared_ptr<ISkin> skin);
 
 		protected:
-			// left, top 的锚点 [0, 1]
+			// left, bottom 的锚点 [0, 1]
 			Point<float> anchor_min_{ 0.5,0.5 };
-			// right, bottom 的锚点 [0, 1]
+			// right, top 的锚点 [0, 1]
 			Point<float> anchor_max_{ 0.5,0.5 };
 			// 界面设计时矩形框的四边相对于锚点的距离
 			Rect<int> anchor_offset_;
-			// 相对于父控件左上角的尺寸坐标 (分辨率适配后的结果)
+			// 相对于父控件左下角的尺寸坐标 (分辨率适配后的结果)
 			Coord<int> relative_coord_;
 
 			LayoutNode *node_parent_{ nullptr };

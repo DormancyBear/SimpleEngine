@@ -30,7 +30,7 @@ namespace SimpleEngine
 			Image(Image const &);
 			~Image();
 
-			void DoRender(Coord<int> bounds) override;
+			void DoRender(Rect<int> bounds) override;
 
 			int GetIndexCount();
 			ID3D11ShaderResourceView* GetTexture();
@@ -38,7 +38,7 @@ namespace SimpleEngine
 		private:
 			bool InitializeBuffers();
 			void ShutdownBuffers();
-			bool RebuildBuffers(Coord<int> coord);
+			bool RebuildBuffers(Rect<int> bounds);
 			void RenderBuffers();
 
 			bool LoadTexture(WCHAR const *);

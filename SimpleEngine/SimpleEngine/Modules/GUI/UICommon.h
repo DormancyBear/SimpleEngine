@@ -10,21 +10,21 @@ namespace SimpleEngine
 		template<typename T>
 		struct Point
 		{
-			T left, top;
+			T x, y;
 
-			Point() : left(0), top(0) {}
+			Point() : x(0), y(0) {}
 
-			Point(T left, T top) : left(left), top(top) {}
+			Point(T x, T y) : x(x), y(y) {}
 
 			Point operator+(Point const& other) const
 			{
-				return Point(left + other.left, top + other.top);
+				return Point(x + other.x, y + other.y);
 			}
 
 			Point& operator+=(Point const & other)
 			{
-				left += other.left;
-				top += other.top;
+				x += other.x;
+				y += other.y;
 				return *this;
 			}
 		};
@@ -42,15 +42,15 @@ namespace SimpleEngine
 		template<typename T>
 		struct Coord
 		{
-			T left, top, width, height;
+			T left, bottom, width, height;
 
-			Coord() : left(0), top(0), width(0), height(0) {}
+			Coord() : left(0), bottom(0), width(0), height(0) {}
 
-			Coord(T left, T top, T width, T height) : left(left), top(top), width(width), height(height) {}
+			Coord(T left, T bottom, T width, T height) : left(left), bottom(bottom), width(width), height(height) {}
 
 			bool operator==(Coord const & other) const
 			{
-				return ((left == other.left) && (top == other.top) && (width == other.width) && (height == other.height));
+				return ((left == other.left) && (bottom == other.bottom) && (width == other.width) && (height == other.height));
 			}
 
 			Size<T> GetSize()

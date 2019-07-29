@@ -16,10 +16,7 @@ namespace SimpleEngine
 			ISkin() {}
 			virtual ~ISkin() {}
 
-			virtual void DoRender(Coord<int> bounds) = 0;
-
-		private:
-
+			virtual void DoRender(Rect<int> bounds) = 0;
 		};
 	}
 }

@@ -432,7 +432,7 @@ void NativePlatform::ShutdownWindows()
 
 	// Remove the window.
 	DestroyWindow(hwnd_);
-	hwnd_ = NULL;
+	hwnd_ = nullptr;
 
 	// Remove the application instance.
 	UnregisterClass(m_applicationName, m_hinstance);

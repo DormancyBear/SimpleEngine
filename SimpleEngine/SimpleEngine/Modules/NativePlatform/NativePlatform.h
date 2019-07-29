@@ -49,7 +49,7 @@ private:
 private:
 	LPCWSTR m_applicationName;
 	HINSTANCE m_hinstance;
-	HWND hwnd_;
+	HWND hwnd_{ nullptr };
 
 	InputClass* m_Input{ nullptr };
 	GraphicsClass* m_Graphics{ nullptr };
@@ -59,7 +59,7 @@ private:
 	TimerClass* m_Timer{ nullptr };
 	PositionClass* m_Position{ nullptr };
 	// 玩家当前实际的窗口大小
-	int screen_width_{ 1280 }, screen_height_{ 768 };
+	int screen_width_{ 1200 }, screen_height_{ 768 };
 };
 
 

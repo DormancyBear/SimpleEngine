@@ -9,7 +9,8 @@ namespace SimpleEngine
 	{
 		void GUIManager::Initialize()
 		{
-			D3DXMatrixIdentity(&world_matrix_);
+			D3DXMatrixTranslation(&world_matrix_, -static_cast<float>(NativePlatform::Instance().GetScreenWidth()) / 2,
+				-static_cast<float>(NativePlatform::Instance().GetScreenHeight()) / 2, 0);
 
 			camera_ = std::make_shared<Camera>();
 			camera_->SetPosition(0.0f, 0.0f, -100.0f);
@@ -38,6 +39,11 @@ namespace SimpleEngine
 
 		void GUIManager::OnWindowResized()
 		{
+			D3DXMatrixTranslation(&world_matrix_,
+				-static_cast<float>(NativePlatform::Instance().GetScreenWidth()) / 2,
+				-static_cast<float>(NativePlatform::Instance().GetScreenHeight()) / 2,
+				0);
+
 			for (auto layout : layout_list_)
 			{
 				layout->OnResize();

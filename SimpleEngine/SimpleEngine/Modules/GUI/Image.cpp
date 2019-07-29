@@ -38,10 +38,10 @@ namespace SimpleEngine
 			}
 		}
 
-		void Image::DoRender(Coord<int> absolute_coord)
+		void Image::DoRender(Rect<int> bounds)
 		{
 			// Re-build the dynamic vertex buffer for rendering to possibly a different location on the screen.
-			RebuildBuffers(absolute_coord);
+			RebuildBuffers(bounds);
 			// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 			RenderBuffers();
 		}
@@ -97,13 +97,10 @@ namespace SimpleEngine
 				indices[i] = i;
 			}
 
-			// 在 2D Rendering 中, 存储 square 的 vertex buffer 需要设为 dynamic vertex buffer =>
-			// D3D11_USAGE_DYNAMIC + D3D11_CPU_ACCESS_WRITE
+			// 在 2D Rendering 中, 存储 square 的 vertex buffer 需要设为 dynamic vertex buffer => D3D11_USAGE_DYNAMIC + D3D11_CPU_ACCESS_WRITE
 			// 场景中的模型数据往往用 static vertex buffer( 自第一次向显存里提供数据后, we can't change the data inside the buffer )
 			// 而 dynamic vertex buffer 在创建之后, 仍然可以在每帧去修改里面的数据
 			// 当然, dynamic 比 static 要慢很多, 但比每帧 destroy and recreate a static vertex buffer 要好得多
-			// 为什么 2D Rendering 要用 dynamic vertex buffer?
-			// 因为 2D Rendering 往往用于 UI 等系统, 常常需要 move the 2D image around the screen
 			vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 			vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
 			vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -173,21 +170,14 @@ namespace SimpleEngine
 			return;
 		}
 
-		bool Image::RebuildBuffers(Coord<int> coord)
+		bool Image::RebuildBuffers(Rect<int> bounds)
 		{
-			// 在 DirectX 里, 屏幕坐标系是以屏幕中心为原点 (0,0), X轴向右为正方向, Y轴向上为正方向
-			Rect<int> new_bounds;
-			new_bounds.left = coord.left - (float)NativePlatform::Instance().GetScreenWidth() / 2;
-			new_bounds.right = new_bounds.left + (float)coord.width;
-			new_bounds.top = (float)NativePlatform::Instance().GetScreenHeight() / 2 - coord.top;
-			new_bounds.bottom = new_bounds.top - (float)coord.height;
-
 			// 如果这个 image 相对于上一帧的尺寸大小没有变化的话, 就不用浪费时间去修改 dynamic vertex buffer, 直接绑定到渲染流水线就可以用了 (每帧都需要重新绑定)
-			if (image_bounds_ == new_bounds)
+			if (image_bounds_ == bounds)
 			{
 				return true;
 			}
-			image_bounds_ = new_bounds;
+			image_bounds_ = bounds;
 
 			// Create the vertex array.
 			VertexType* vertices = new VertexType[m_vertexCount];

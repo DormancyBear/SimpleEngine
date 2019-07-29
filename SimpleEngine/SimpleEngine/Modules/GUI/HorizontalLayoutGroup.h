@@ -21,7 +21,7 @@ namespace SimpleEngine
 			void OnResize(float resize_scale) override;
 
 			void SetLeftPadding(float left_padding);
-			void SetItemSpacing(float spacing);
+			void SetItemSpacing(int spacing);
 
 		protected:
 			float left_padding_{ 0 };
