@@ -8,7 +8,6 @@ GraphicsClass::GraphicsClass()
 	m_ShaderManager = 0;
 	m_DirectionalLight = 0;
 	m_PointLight = 0;
-	//m_Text = 0;
 	m_RenderTexture = 0;
 }
 
@@ -139,22 +138,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-
-	// Create the text object.
-	//m_Text = new TextClass;
-	//if(!m_Text)
-	//{
-	//	return false;
-	//}
-
-	// Initialize the text object.
-	//result = m_Text->Initialize(DirectXPlatformManager::Instance().GetDevice(), DirectXPlatformManager::Instance().GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
-	//if(!result)
-	//{
-	//	MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
-	//	return false;
-	//}
-
 	return true;
 }
 
@@ -181,14 +164,6 @@ void GraphicsClass::Shutdown()
 	//{
 	//	delete m_GroundModel;
 	//	m_GroundModel = 0;
-	//}
-
-	// Release the text object.
-	//if(m_Text)
-	//{
-	//	m_Text->Shutdown();
-	//	delete m_Text;
-	//	m_Text = 0;
 	//}
 
 	// Release the light object.

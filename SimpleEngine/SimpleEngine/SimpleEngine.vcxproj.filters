@@ -78,9 +78,6 @@
     <ClInclude Include="include\LightShaderClass.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\TextClass.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\FontClass.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -118,6 +115,9 @@
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="Modules\GUI\HorizontalLayoutGroup.h">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Modules\GUI\Text.h">
       <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
@@ -176,9 +176,6 @@
     <ClCompile Include="src\LightShaderClass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\TextClass.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\FontClass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -212,6 +209,9 @@
     <ClCompile Include="Modules\GUI\HorizontalLayoutGroup.cpp">
       <Filter>GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Modules\GUI\Text.cpp">
+      <Filter>GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="media\RenderFX\font.ps">
@@ -243,6 +243,9 @@
       <Filter>Effect Files</Filter>
     </None>
     <None Include="media\RenderFX\texture.vs">
+      <Filter>Effect Files</Filter>
+    </None>
+    <None Include="media\RenderFX\Reflection.vs">
       <Filter>Effect Files</Filter>
     </None>
   </ItemGroup>

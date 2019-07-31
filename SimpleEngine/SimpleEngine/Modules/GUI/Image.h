@@ -4,6 +4,8 @@
 #ifndef UI_IMAGE_H_
 #define UI_IMAGE_H_
 
+#pragma once
+
 #include <d3d11.h>
 #include <d3dx10math.h>
 

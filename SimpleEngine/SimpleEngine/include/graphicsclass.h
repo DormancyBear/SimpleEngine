@@ -11,7 +11,6 @@
 #include "DirectionalLightClass.h"
 #include "PointLightClass.h"
 #include "RenderTextureClass.h"
-#include "TextClass.h"
 
 
 const bool FULL_SCREEN = false;	// х╚фадёй╫
@@ -42,7 +41,6 @@ private:
 	RenderTextureClass* m_RenderTexture;
 	DirectionalLightClass* m_DirectionalLight;
 	PointLightClass *m_PointLight;
-	//TextClass* m_Text;
 };
 
 #endif

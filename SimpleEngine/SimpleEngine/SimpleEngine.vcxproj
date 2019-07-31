@@ -146,7 +146,6 @@
     <ClInclude Include="include\ShaderManagerClass.h" />
     <ClInclude Include="include\ShadowShaderClass.h" />
     <ClInclude Include="include\soundclass.h" />
-    <ClInclude Include="include\TextClass.h" />
     <ClInclude Include="include\textureclass.h" />
     <ClInclude Include="include\timerclass.h" />
     <ClInclude Include="Modules\Graphics\Camera.h" />
@@ -156,6 +155,7 @@
     <ClInclude Include="Modules\GUI\ExampleLayout.h" />
     <ClInclude Include="Modules\GUI\HorizontalLayoutGroup.h" />
     <ClInclude Include="Modules\GUI\Skin.h" />
+    <ClInclude Include="Modules\GUI\Text.h" />
     <ClInclude Include="Modules\GUI\UICommon.h" />
     <ClInclude Include="Modules\GUI\GUIManager.h" />
     <ClInclude Include="Modules\GUI\Image.h" />
@@ -172,6 +172,7 @@
     <ClCompile Include="Modules\GUI\HorizontalLayoutGroup.cpp" />
     <ClCompile Include="Modules\GUI\Image.cpp" />
     <ClCompile Include="Modules\GUI\LayoutNode.cpp" />
+    <ClCompile Include="Modules\GUI\Text.cpp" />
     <ClCompile Include="Modules\NativePlatform\NativePlatform.cpp" />
     <ClCompile Include="src\cpuclass.cpp" />
     <ClCompile Include="src\DepthShaderClass.cpp" />
@@ -190,7 +191,6 @@
     <ClCompile Include="src\ShaderManagerClass.cpp" />
     <ClCompile Include="src\ShadowShaderClass.cpp" />
     <ClCompile Include="src\soundclass.cpp" />
-    <ClCompile Include="src\TextClass.cpp" />
     <ClCompile Include="src\textureclass.cpp" />
     <ClCompile Include="src\timerclass.cpp" />
   </ItemGroup>
@@ -201,6 +201,7 @@
     <None Include="media\RenderFX\font.vs" />
     <None Include="media\RenderFX\light.ps" />
     <None Include="media\RenderFX\light.vs" />
+    <None Include="media\RenderFX\Reflection.vs" />
     <None Include="media\RenderFX\shadow.ps" />
     <None Include="media\RenderFX\shadow.vs" />
     <None Include="media\RenderFX\texture.ps" />

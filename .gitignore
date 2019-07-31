@@ -13,5 +13,6 @@ Debug
 Release
 shader-error.txt
 *.bak
-Models
-Sounds
+SimpleEngine/SimpleEngine/media/Models
+SimpleEngine/SimpleEngine/media/Sounds
+SimpleEngine/SimpleEngine/media/Textures
